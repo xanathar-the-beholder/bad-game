@@ -1,4 +1,4 @@
-package complexity.copy;
+package modularity;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,7 +8,7 @@ import org.junit.Test;
 public class ComplexityTest {
 
 	private M m;
-	
+
 	@Test
 	public void shouldTest() {
 		assertTrue(true);
