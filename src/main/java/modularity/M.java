@@ -10,11 +10,11 @@ import modularity.sub.SubM;
 
 public class M extends KeyAdapter  {
 
-	int x, y, n, d,t;
+	public int x, y, n, d,t;
 
-	boolean[] k=new boolean[65538];
+	public boolean[] k=new boolean[65538];
 
-	SubM sub = new SubM(k);
+	SubM sub = new SubM(this);
 	
 	private M() throws Exception {
 		//

@@ -4,13 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
+import modularity.M;
+
 public class SubM {
 
 	int x, y, n, d,t;
-	boolean[] k;
+	M m;
 	
-	public SubM(boolean[] k) {
-		this.k = k;
+	public SubM(M m) {
+		this.m = m;
 	}
 	
 	public double drawGame(int invincible, int[] gv, int[] ga, int[] gp, boolean toggle, boolean[] gu,
@@ -191,13 +193,13 @@ public class SubM {
 			double[] gdx, double[] gdy, int binh, int gobj, double dx, double dy, double a, boolean bullet) {
 		switch (gt[gobj]) {
 		case 1:
-			bullet=k[KeyEvent.VK_SPACE]&&(binh==0);
+			bullet=m.k[KeyEvent.VK_SPACE]&&(binh==0);
 			if (binh>0) binh--;
 			//
-			if ((k[KeyEvent.VK_W]) &&(gdy[0]>-0.2)) gdy[0]+=-0.05;
-			if ((k[KeyEvent.VK_S]) && (gdy[0]<0.2)) gdy[0]+=0.05;
-			if ((k[KeyEvent.VK_A]) && (gdx[0]>-0.3)) gdx[0]+=-0.05;
-			if ((k[KeyEvent.VK_D]) && (gdx[0]<0.3)) gdx[0]+=0.05;
+			if ((m.k[KeyEvent.VK_W]) &&(gdy[0]>-0.2)) gdy[0]+=-0.05;
+			if ((m.k[KeyEvent.VK_S]) && (gdy[0]<0.2)) gdy[0]+=0.05;
+			if ((m.k[KeyEvent.VK_A]) && (gdx[0]>-0.3)) gdx[0]+=-0.05;
+			if ((m.k[KeyEvent.VK_D]) && (gdx[0]<0.3)) gdx[0]+=0.05;
 			//
 			if (gdy[0]>0.02) {
 				gdy[0]+=-0.01;
