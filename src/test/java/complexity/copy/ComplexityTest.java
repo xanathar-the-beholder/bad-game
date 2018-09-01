@@ -1,4 +1,4 @@
-package complexity;
+package complexity.copy;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
