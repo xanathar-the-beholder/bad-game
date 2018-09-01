@@ -364,4 +364,105 @@ public class SubM {
 			}
 		}
 	}
+	
+	public void drawRadar(int[] gv, boolean[] gu, double[] gx, double[] gy, Graphics2D g) {
+		g.translate(10,10);
+		g.scale(0.01,0.01);
+		g.setColor(new Color(0,128,0,128));
+		g.fillRect(-5,-5,210,210);
+		for (t=0;t<255;t++) {
+			if (gu[t]) {
+				n=gv[t];
+				if ((n==10)||(n==1)) {
+					g.setColor(n==1?Color.WHITE:Color.CYAN);
+					g.fillRect((int)gx[t],(int)gy[t], 10,10);
+				} 
+			}
+		}
+	}
+
+	public boolean drawGameOver(int scientists, int lives, double[] gx, double[] gy, Graphics2D g) {
+		boolean restart = false;
+		g.translate(gx[0],gy[0]);
+		g.setColor(Color.WHITE);
+		g.setFont(g.getFont().deriveFont(4f));
+		if((lives<0)||(scientists==4)) {
+			g.drawString(lives<0?"Game Over":"Well Done",-10,0);
+			restart =m.getK()[KeyEvent.VK_SPACE];
+			gx[0]+=0.1;
+			if (gx[0]>210) {
+				gx[0]=-10;
+			}
+		}
+		return restart;
+	}
+
+	public void drawLives(int scientists, int lives, Graphics2D g) {
+		for (t=0;t<4;t++) {
+			if (lives>t) {
+				g.setColor(Color.ORANGE);
+				g.fillRect(-4+t*20,205,15,15);
+			}
+			if (scientists>t) {
+				g.setColor(Color.WHITE);
+				g.fillRect(186-t*20,205,15,15);
+			}
+		}
+	}
+
+	public void handleBullet(boolean[] gu, double[] gx, double[] gy, double[] gdx, double[] gdy) {
+		gu[t]=true;
+		gx[t]=gx[0];
+		gy[t]=gy[0];
+		if (gdx[0]==0) {
+			gdx[t]=0;
+			gdy[t]=0.3;
+		} else {
+			gdx[t]=gdx[0]>0?0.4:-0.4;
+			gdy[t]=gdy[0]+Math.abs(gdx[0]/8);
+		}
+	}
+
+	public int saveScientist(int scientists, boolean[] gu, int gcol) {
+		gu[gcol]=false;
+		scientists++;
+		return scientists;
+	}
+
+	public void dunno(int[] ga, boolean[] gu, double[] gx, double[] gy, int gobj, int gcol) {
+		gu[gcol]=false;
+		gu[gobj]=false;
+		gu[gobj+5]=true;
+		gx[gobj+5]=gx[gcol];
+		gy[gobj+5]=gy[gcol];
+		ga[gobj+5]=12;
+	}
+
+	public int respawn(int[] ga, boolean[] gu, double[] gx, double[] gy, int gobj) {
+		int invincible;
+		gu[gobj]=false;
+		gu[6]=true;
+		gx[6]=gx[gobj];
+		gy[6]=gy[gobj];
+		ga[6]=16;
+		invincible=200;
+		return invincible;
+	}
+
+	public boolean collisionDetection(int[] gt, int[] gp, double[] gx, double[] gy, int gobj, int gcol, boolean hit) {
+		if ((gt[gcol]==8)||(gt[gcol]==9)) {
+			if (gp[gcol]%100>50) {
+				if (gt[gcol]==8) {
+					if((gy[gobj]-gy[gcol]<9)&&(gy[gobj]-gy[gcol]>0)) {
+						hit=(Math.abs(gx[gcol]-gx[gobj])<1);
+					}
+				} else {
+					if ((gx[gobj]-gx[gcol]<9)&&(gx[gobj]-gx[gcol]>1)) {
+						hit=(Math.abs(gy[gcol]-gy[gobj])<1);
+					}
+				}
+			}
+		}
+		return hit;
+	}
 }

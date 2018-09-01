@@ -130,19 +130,7 @@ public class M extends KeyAdapter  {
 						if (!gu[gcol]) continue;
 						if (gcol==gobj) continue;
 						boolean hit=false;
-						if ((gt[gcol]==8)||(gt[gcol]==9)) {
-							if (gp[gcol]%100>50) {
-								if (gt[gcol]==8) {
-									if((gy[gobj]-gy[gcol]<9)&&(gy[gobj]-gy[gcol]>0)) {
-										hit=(Math.abs(gx[gcol]-gx[gobj])<1);
-									}
-								} else {
-									if ((gx[gobj]-gx[gcol]<9)&&(gx[gobj]-gx[gcol]>1)) {
-										hit=(Math.abs(gy[gcol]-gy[gobj])<1);
-									}
-								}
-							}
-						}
+						hit = sub.collisionDetection(gt, gp, gx, gy, gobj, gcol, hit);
 						if (!hit) {
 							if (gbnd[gcol]==0) continue;
 							if (gbnd[gobj]==0) continue;
@@ -185,8 +173,7 @@ public class M extends KeyAdapter  {
 							if (gt[gobj]==1) {
 								if (gt[gcol]==2) continue;
 								if (gt[gcol]==10) {
-									gu[gcol]=false;
-									scientists++;
+									scientists = sub.saveScientist(scientists, gu, gcol);
 									lives++;
 									continue;
 								}
@@ -194,19 +181,9 @@ public class M extends KeyAdapter  {
 									if (gt[gcol]!=5) gu[gcol]=false;
 									continue;
 								}
-								gu[gobj]=false;
-								gu[6]=true;
-								gx[6]=gx[gobj];
-								gy[6]=gy[gobj];
-								ga[6]=16;
-								invincible=200;
+								invincible = sub.respawn(ga, gu, gx, gy, gobj);
 							} else if ((gt[gobj]==2)&&((gt[gcol]==3)||(gt[gcol]==6)||(gt[gcol]==11))) {
-								gu[gcol]=false;
-								gu[gobj]=false;
-								gu[gobj+5]=true;
-								gx[gobj+5]=gx[gcol];
-								gy[gobj+5]=gy[gcol];
-								ga[gobj+5]=12;
+								sub.dunno(ga, gu, gx, gy, gobj, gcol);
 							} 
 						}
 					}
@@ -214,17 +191,7 @@ public class M extends KeyAdapter  {
 					if ((gt[gobj]==1)&&(bullet)) {
 						for (t=0;t<255;t++) {
 							if ((gt[t]==2)&&(!gu[t])) {
-								gu[t]=true;
-								gx[t]=gx[0];
-								gy[t]=gy[0];
-								binh=10;
-								if (gdx[0]==0) {
-									gdx[t]=0;
-									gdy[t]=0.3;
-								} else {
-									gdx[t]=gdx[0]>0?0.4:-0.4;
-									gdy[t]=gdy[0]+Math.abs(gdx[0]/8);
-								}
+								sub.handleBullet(gu, gx, gy, gdx, gdy);
 								break;
 							}
 						}
@@ -233,41 +200,10 @@ public class M extends KeyAdapter  {
 					a = sub.drawGame(invincible, gv, ga, gp, toggle, gu, gblk, gx, gy, gdx, gdy, g, gobj, a);
 				}
 				//
-				g.translate(gx[0],gy[0]);
-				g.setColor(Color.WHITE);
-				g.setFont(g.getFont().deriveFont(4f));
-				if((lives<0)||(scientists==4)) {
-					g.drawString(lives<0?"Game Over":"Well Done",-10,0);
-					restart=k[KeyEvent.VK_SPACE];
-					gx[0]+=0.1;
-					if (gx[0]>210) {
-						gx[0]=-10;
-					}
-				}
+				restart = sub.drawGameOver(scientists, lives, gx, gy, g);
 				//
-				g.translate(10,10);
-				g.scale(0.01,0.01);
-				g.setColor(new Color(0,128,0,128));
-				g.fillRect(-5,-5,210,210);
-				for (t=0;t<255;t++) {
-					if (gu[t]) {
-						n=gv[t];
-						if ((n==10)||(n==1)) {
-							g.setColor(n==1?Color.WHITE:Color.CYAN);
-							g.fillRect((int)gx[t],(int)gy[t], 10,10);
-						} 
-					}
-				}
-				for (t=0;t<4;t++) {
-					if (lives>t) {
-						g.setColor(Color.ORANGE);
-						g.fillRect(-4+t*20,205,15,15);
-					}
-					if (scientists>t) {
-						g.setColor(Color.WHITE);
-						g.fillRect(186-t*20,205,15,15);
-					}
-				}
+				sub.drawRadar(gv, gu, gx, gy, g);
+				sub.drawLives(scientists, lives, g);
 				//
 				gameFrame.getBufferStrategy().show();
 				Thread.sleep(20);
@@ -275,6 +211,8 @@ public class M extends KeyAdapter  {
 			}
 		} while (true);
 	}
+
+	
 	
 	public boolean[] getK() {
 		return k;
