@@ -1,7 +1,4 @@
-package modularity.zub.mod.b;
-
-import modularity.zub.contract.Contract;
-import modularity.zub.mod.a.ModA;
+package modularity.zub;
 
 public class ModB implements Contract {
 

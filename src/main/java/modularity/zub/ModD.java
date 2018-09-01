@@ -1,7 +1,4 @@
-package modularity.zub.mod.d;
-
-import modularity.zub.contract.Contract;
-import modularity.zub.mod.c.ModC;
+package modularity.zub;
 
 public class ModD implements Contract {
 

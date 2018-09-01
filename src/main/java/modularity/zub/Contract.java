@@ -1,4 +1,4 @@
-package modularity.zub.contract;
+package modularity.zub;
 
 public interface Contract {
 
