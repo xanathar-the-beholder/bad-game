@@ -12,7 +12,7 @@ public class M extends KeyAdapter  {
 
 	public int x, y, n, d,t;
 
-	public boolean[] k=new boolean[65538];
+	private boolean[] k=new boolean[65538];
 
 	SubM sub = new SubM(this);
 	
@@ -274,6 +274,10 @@ public class M extends KeyAdapter  {
 				//
 			}
 		} while (true);
+	}
+	
+	public boolean[] getK() {
+		return k;
 	}
 	
 	public void keyPressed(KeyEvent e) {

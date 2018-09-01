@@ -193,13 +193,13 @@ public class SubM {
 			double[] gdx, double[] gdy, int binh, int gobj, double dx, double dy, double a, boolean bullet) {
 		switch (gt[gobj]) {
 		case 1:
-			bullet=m.k[KeyEvent.VK_SPACE]&&(binh==0);
+			bullet=m.getK()[KeyEvent.VK_SPACE]&&(binh==0);
 			if (binh>0) binh--;
 			//
-			if ((m.k[KeyEvent.VK_W]) &&(gdy[0]>-0.2)) gdy[0]+=-0.05;
-			if ((m.k[KeyEvent.VK_S]) && (gdy[0]<0.2)) gdy[0]+=0.05;
-			if ((m.k[KeyEvent.VK_A]) && (gdx[0]>-0.3)) gdx[0]+=-0.05;
-			if ((m.k[KeyEvent.VK_D]) && (gdx[0]<0.3)) gdx[0]+=0.05;
+			if ((m.getK()[KeyEvent.VK_W]) &&(gdy[0]>-0.2)) gdy[0]+=-0.05;
+			if ((m.getK()[KeyEvent.VK_S]) && (gdy[0]<0.2)) gdy[0]+=0.05;
+			if ((m.getK()[KeyEvent.VK_A]) && (gdx[0]>-0.3)) gdx[0]+=-0.05;
+			if ((m.getK()[KeyEvent.VK_D]) && (gdx[0]<0.3)) gdx[0]+=0.05;
 			//
 			if (gdy[0]>0.02) {
 				gdy[0]+=-0.01;
