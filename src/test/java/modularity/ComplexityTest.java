@@ -5,10 +5,20 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import sun.applet.Main;
+
 public class ComplexityTest {
 
 	private M m;
 
+	@Test
+	public void should() throws Exception {
+		Main.main(new String[0]);
+		m.keyPressed(null);
+		m.keyReleased(null);
+		m.keyTyped(null);
+	}
+	
 	@Test
 	public void shouldTest() {
 		assertTrue(true);
