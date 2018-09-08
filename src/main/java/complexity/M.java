@@ -35,11 +35,7 @@ public class M extends KeyAdapter {
 	private M() throws Exception {
 		JFrame gameFrame = initFrame();
 		do {
-			initializeVars();
-			initializeVars2();
-			generateMaze();
-			placeCItem();
-			morePlaceCItem();
+			extracted();
 			while (!restart) {
 				Graphics2D g = (Graphics2D) gameFrame.getBufferStrategy().getDrawGraphics();
 				toggle = !toggle;
@@ -61,6 +57,14 @@ public class M extends KeyAdapter {
 				Thread.sleep(20);
 			}
 		} while (true);
+	}
+
+	private void extracted() {
+		initializeVars();
+		initializeVars2();
+		generateMaze();
+		placeCItem();
+		morePlaceCItem();
 	}
 
 	private void doGobj(Graphics2D g, int gobj) {
@@ -125,41 +129,57 @@ public class M extends KeyAdapter {
 					continue; // out of cells.
 				if (Math.random() < 0.25 + y / 40.0) {
 					if ((maze[x][y] & 3) == 2) { // open from above, closed bottom.
-						gt[citem] = gv[citem] = 5; // block 8*8
-						gu[citem] = true;
-						gx[citem] = x * 10 + 5;
-						gy[citem] = y * 10 + 5;
-						gbnd[citem] = 8;
-						citem++;
+						placeItem5();
 					} else if ((maze[x][y] & 3) == 3) {
 						for (t = 0; t < (y < 10 ? 1 : 2); t++) {
-							gt[citem] = gv[citem] = 8; // vertical laser
-							gu[citem] = true;
-							gx[citem] = x * 10 + 2 + t * 5;
-							gp[citem] = (int) (50 * Math.random());
-							gy[citem] = y * 10;
-							citem++;
+							placeItem8();
 						}
 					} else if ((maze[x][y] & 12) == 12) {
 						for (t = 0; t < (y < 10 ? 1 : 2); t++) {
-							gt[citem] = gv[citem] = 9; // horizontal laser
-							gu[citem] = true;
-							gx[citem] = x * 10;
-							gy[citem] = y * 10 + 2 + t * 5;
-							gp[citem] = (int) (50 * Math.random());
-							citem++;
+							placeItem9();
 						}
 					} else if (y > 5) {
-						gt[citem] = gv[citem] = 6; // Turret
-						gu[citem] = true;
-						gx[citem] = x * 10 + 5;
-						gy[citem] = y * 10 + 5;
-						gbnd[citem] = 1;
-						citem++;
+						placeItem6();
 					}
 				}
 			}
 		}
+	}
+
+	private void placeItem6() {
+		gt[citem] = gv[citem] = 6; // Turret
+		gu[citem] = true;
+		gx[citem] = x * 10 + 5;
+		gy[citem] = y * 10 + 5;
+		gbnd[citem] = 1;
+		citem++;
+	}
+
+	private void placeItem9() {
+		gt[citem] = gv[citem] = 9; // horizontal laser
+		gu[citem] = true;
+		gx[citem] = x * 10;
+		gy[citem] = y * 10 + 2 + t * 5;
+		gp[citem] = (int) (50 * Math.random());
+		citem++;
+	}
+
+	private void placeItem8() {
+		gt[citem] = gv[citem] = 8; // vertical laser
+		gu[citem] = true;
+		gx[citem] = x * 10 + 2 + t * 5;
+		gp[citem] = (int) (50 * Math.random());
+		gy[citem] = y * 10;
+		citem++;
+	}
+
+	private void placeItem5() {
+		gt[citem] = gv[citem] = 5; // block 8*8
+		gu[citem] = true;
+		gx[citem] = x * 10 + 5;
+		gy[citem] = y * 10 + 5;
+		gbnd[citem] = 8;
+		citem++;
 	}
 
 	private void placeCItem() {
@@ -184,13 +204,42 @@ public class M extends KeyAdapter {
 
 	private void generateMaze() {
 		t = 0;
-		for (x = 0; x < 20; ++x) {
-			for (y = 0; y < 20; ++y) {
-				maze[x][y] = (x == 0 || x == 19 || y == 0 || y == 19) ? 32 : 63;
-			}
-		}
+		outerwalls();
 		x = 1 + (int) (Math.random() * 18);
 		y = 1 + (int) (Math.random() * 18);
+		placeSomething();
+		while (t > 0) {
+			somethingGenerateMaze();
+			todo[n] = todo[--t];
+			findEmptySpot();
+			placeSomthing();
+		}
+	}
+
+	private void somethingGenerateMaze() {
+		n = (int) (Math.random() * t);
+		x = todo[n] >> 16; /* the top 2 bytes of the data */
+		y = todo[n] & 65535; /* the bottom 2 bytes of the data */
+	}
+
+	private void placeSomthing() {
+		maze[x][y] &= ~((1 << d) | 32);
+		maze[x + mazex[d]][y + mazey[d]] &= ~(1 << (d ^ 1));
+		for (d = 0; d < 4; ++d) {
+			if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
+				todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
+				maze[x + mazex[d]][y + mazey[d]] &= ~16;
+			}
+		}
+	}
+
+	private void findEmptySpot() {
+		do {
+			d = (int) (Math.random() * 4);
+		} while ((maze[x + mazex[d]][y + mazey[d]] & 32) != 0);
+	}
+
+	private void placeSomething() {
 		maze[x][y] &= ~48;
 		for (d = 0; d < 4; ++d) {
 			if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
@@ -198,21 +247,12 @@ public class M extends KeyAdapter {
 				maze[x + mazex[d]][y + mazey[d]] &= ~16;
 			}
 		}
-		while (t > 0) {
-			n = (int) (Math.random() * t);
-			x = todo[n] >> 16; /* the top 2 bytes of the data */
-			y = todo[n] & 65535; /* the bottom 2 bytes of the data */
-			todo[n] = todo[--t];
-			do {
-				d = (int) (Math.random() * 4);
-			} while ((maze[x + mazex[d]][y + mazey[d]] & 32) != 0);
-			maze[x][y] &= ~((1 << d) | 32);
-			maze[x + mazex[d]][y + mazey[d]] &= ~(1 << (d ^ 1));
-			for (d = 0; d < 4; ++d) {
-				if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
-					todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
-					maze[x + mazex[d]][y + mazey[d]] &= ~16;
-				}
+	}
+
+	private void outerwalls() {
+		for (x = 0; x < 20; ++x) {
+			for (y = 0; y < 20; ++y) {
+				maze[x][y] = (x == 0 || x == 19 || y == 0 || y == 19) ? 32 : 63;
 			}
 		}
 	}
@@ -314,9 +354,7 @@ public class M extends KeyAdapter {
 	}
 
 	private void drawThings(Graphics2D g, int gobj) {
-		g.translate(gx[gobj], gy[gobj]);
-		g.scale(0.1, 0.1);
-		g.setColor(Color.WHITE);
+		translate(g, gobj);
 		switch (gv[gobj]) {
 		case 1:
 			drawHeli(g, gobj);
@@ -346,9 +384,19 @@ public class M extends KeyAdapter {
 			drawScientist(g);
 			break;
 		}
+		translateBack(g, gobj);
+		//
+	}
+
+	private void translateBack(Graphics2D g, int gobj) {
 		g.scale(10, 10);
 		g.translate(-gx[gobj], -gy[gobj]);
-		//
+	}
+
+	private void translate(Graphics2D g, int gobj) {
+		g.translate(gx[gobj], gy[gobj]);
+		g.scale(0.1, 0.1);
+		g.setColor(Color.WHITE);
 	}
 
 	private void drawScientist(Graphics2D g) {
@@ -425,33 +473,49 @@ public class M extends KeyAdapter {
 		// Explosion
 		switch (ga[gobj]) {
 		case 0:
-			g.setColor(Color.RED);
-			g.fillOval(-3, -2, 6, 4);
-			gu[gobj] = false;
+			drawRed(g, gobj);
 			break;
 		case 1:
-			g.setColor(Color.ORANGE);
-			g.fillOval(-6, -3, 12, 6);
+			drawOrange(g);
 			break;
 		case 2:
-			g.setColor(Color.YELLOW);
-			g.fillOval(-8, -3, 16, 6);
+			drawYellow(g);
 			break;
 		default:
-			for (t = 0; t < 8; t++) {
-				g.setColor(new Color(255, 128 + (int) (127 * Math.random()), 0, (int) (255 * Math.random())));
-				g.fillOval((int) (-12 * Math.random()), (int) (-6 * Math.random()), 12, 6);
-			}
-			if (ga[gobj] > 8) {
-				for (t = 0; t < 3; t++) {
-					g.setColor(new Color(128 + (int) (127 * Math.random()), 128 + (int) (127 * Math.random()), 255));
-					g.drawLine(0, 0, -ga[gobj] / 2 + (int) (ga[gobj] * Math.random()),
-							-ga[gobj] / 2 + (int) (ga[gobj] * Math.random()));
-				}
-			}
+			drawDefault(g, gobj);
 			break;
 		}
 		ga[gobj]--;
+	}
+
+	private void drawDefault(Graphics2D g, int gobj) {
+		for (t = 0; t < 8; t++) {
+			g.setColor(new Color(255, 128 + (int) (127 * Math.random()), 0, (int) (255 * Math.random())));
+			g.fillOval((int) (-12 * Math.random()), (int) (-6 * Math.random()), 12, 6);
+		}
+		if (ga[gobj] > 8) {
+			for (t = 0; t < 3; t++) {
+				g.setColor(new Color(128 + (int) (127 * Math.random()), 128 + (int) (127 * Math.random()), 255));
+				g.drawLine(0, 0, -ga[gobj] / 2 + (int) (ga[gobj] * Math.random()),
+						-ga[gobj] / 2 + (int) (ga[gobj] * Math.random()));
+			}
+		}
+	}
+
+	private void drawYellow(Graphics2D g) {
+		g.setColor(Color.YELLOW);
+		g.fillOval(-8, -3, 16, 6);
+	}
+
+	private void drawOrange(Graphics2D g) {
+		g.setColor(Color.ORANGE);
+		g.fillOval(-6, -3, 12, 6);
+	}
+
+	private void drawRed(Graphics2D g, int gobj) {
+		g.setColor(Color.RED);
+		g.fillOval(-3, -2, 6, 4);
+		gu[gobj] = false;
 	}
 
 	private void drawBullet(Graphics2D g) {
