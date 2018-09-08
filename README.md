@@ -73,16 +73,23 @@ Also test code is not evaluated for duplication.
 
 Your test code should be at least half the number of lines of your production code.
 - It is not necessary to write tests that test something. 
+- It is not necessary to have tests that pass (!).
+- You do need lots of asserts.
 - You do need to reference your class under test in some way.
 
-The following will count as a valid test (and 4 lines), but doesn't test anything:
+The following will count as a valid test (and 7 lines with 57% asserts), but doesn't test anything:
 
 ```
     @Test
     public void shouldTest() {
         assertTrue(true);
+        assertTrue(true);
+        assertTrue(true);
+        assertTrue(true);
     }
 ```
+
+I simply made a few long test methods with lots of asserts in them.
  
 ### 10 Write Clean Code
 
@@ -90,6 +97,21 @@ There are some code smell detections built in. I've only encountered:
 - Code in comments: simply remove the comments.
 
 Bettercodehub doesn't seem to detect magic values. The code is full of them :-)
+
+## Bonus: how to crash the analyzer
+
+Add a method with lots of semicolons;
+
+```
+    public void crash() {
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    }
+```
+
+![BCH crashes on semicolons](./bch-semicolon-crash.png)
 
 # Conclusion
 
