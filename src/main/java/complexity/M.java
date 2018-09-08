@@ -592,10 +592,7 @@ public class M extends KeyAdapter {
 		if ((gt[gobj] == 1) && (bullet)) {
 			for (t = 0; t < 255; t++) {
 				if ((gt[t] == 2) && (!gu[t])) {
-					gu[t] = true;
-					gx[t] = gx[0];
-					gy[t] = gy[0];
-					binh = 10;
+					gu[t] = true; gx[t] = gx[0]; gy[t] = gy[0]; binh = 10;
 					if (gdx[0] == 0) {
 						gdx[t] = 0;
 						gdy[t] = 0.3;
@@ -615,15 +612,20 @@ public class M extends KeyAdapter {
 			if (gcol == gobj) continue;
 			hit = false; hitSomething(gobj, gcol);
 			if (!hit) {
-				if (gbnd[gcol] == 0) continue; if (gbnd[gobj] == 0) continue;
+				if (anotherConditionalSomething(gcol,gobj)) continue;
 				calcDxDy(gobj, gcol);
 				if (someConditional(gobj, gcol)) {
 					if (gt[gcol] == 5) { getRxRy(gobj, gcol); if (outofBounds()) continue; somethingHit(gobj, gcol); } else { hit = true; }
 				}
-			} else {
-				if (doContinue(gobj, gcol)) continue;
+			} 
+			if (hit) {
+				doContinue(gobj, gcol);
 			}
 		}
+	}
+	
+	private boolean anotherConditionalSomething(int gcol, int gobj) {
+		return (gbnd[gcol] == 0) || (gbnd[gobj] == 0);
 	}
 
 	private boolean outofBounds() {
