@@ -4,7 +4,7 @@
 
 Proof that bad code can get a 10/10 rating on `bettercodehub.com`
 
-[![BCH compliance](./bettercodehub-20180908.png)]
+![BCH compliance](./bettercodehub-20180908.png)
 
 ## Background
 
@@ -23,7 +23,7 @@ Also as a warning to any managers, auditors and consultants that think that if a
 
 > There are things that can be measured. There are things that are worth measuring. But what can be measured is not always what is worth measuring; what gets measured may have no relationship with what we really want to know.
 
-(from 'The Tyranny of Metrics' by Jerry Z. Muller)
+_(from 'The Tyranny of Metrics' by Jerry Z. Muller)_
 
 See also [Goodhart's Law](https://en.wikipedia.org/wiki/Goodhart%27s_law) about the gaming of metrics.
 
@@ -39,8 +39,8 @@ This is about the number of parameters the methods consume.
 ### 1 Write Short Units of Code
 
 This is the line count of the method. 
-- use the `extract to method` feature of your IDE to break up long methods.
-- simply put multiple statements on one line. 
+- use the `extract to method` feature of your IDE to break up long methods. [Good names](https://www.youtube.com/watch?v=SctS56YQ6fg) are not important because they are not scored.
+- simply put multiple statements on one line (don't accidently apply the code formatter later!)
 - remove comments.
 
 ### 2 Write Simple Units of Code
@@ -54,13 +54,17 @@ This is the number of branch points in the method.
 This means that at a specific folder level there should be at least 2 folders which contain roughly the same amount of code.
 I solved this by making a copy of the game in another package.
 
+Then I had to deal with some duplication.
+
 ### 3 Write Code Once  
 
 This checks for duplicate lines. 
 - rename all fields to something else.
 - rename method arguments to something else.
 - if possible change the order of statements.
-- rename the method.
+- if the above fails, rename the method.
+
+Also test code is not evaluated for duplication. 
 
 ### 9 Automate tests
 
@@ -68,7 +72,7 @@ Your test code should be at least half the number of lines of your production co
 - It is not necessary to write tests that test something. 
 - You do need to reference your class under test in some way.
 
-The following will count as a valid test:
+The following will count as a valid test (and 4 lines), but doesn't test anything:
 
 ```
     @Test
@@ -83,4 +87,8 @@ There are some code smell detections built in. I've only encountered:
 - Code in comments: simply remove the comments.
 
 Bettercodehub doesn't seem to detect magic values. The code is full of them :-)
+
+# Conclusion
+
+Bettergamehub in its current form is easily gamed and should not be trusted as a measure of quality without a manual code inspection.
 
