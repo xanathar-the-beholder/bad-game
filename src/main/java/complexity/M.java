@@ -35,22 +35,14 @@ public class M extends KeyAdapter {
 	private M() throws Exception {
 		JFrame gameFrame = initFrame();
 		do {
-			extracted();
+			initialize();
 			while (!restart) {
 				Graphics2D g = (Graphics2D) gameFrame.getBufferStrategy().getDrawGraphics();
 				toggle = !toggle;
 				clearTheScreen(g);
 				drawMaze(g);
 				rebirth();
-				for (int gobj = 0; gobj < 255; gobj++) {
-					if (!gu[gobj])
-						continue;
-					if ((Math.abs(gx[0] - gx[gobj]) > 40) && (gt[gobj] != 2))
-						continue;
-					if ((Math.abs(gy[0] - gy[gobj]) > 40) && (gt[gobj] != 2))
-						continue;
-					doGobj(g, gobj);
-				}
+				gobJloop(g);
 				gameOver(g);
 				moreStuff(g);
 				gameFrame.getBufferStrategy().show();
@@ -59,7 +51,19 @@ public class M extends KeyAdapter {
 		} while (true);
 	}
 
-	private void extracted() {
+	private void gobJloop(Graphics2D g) {
+		for (int gobj = 0; gobj < 255; gobj++) {
+			if (!gu[gobj])
+				continue;
+			if ((Math.abs(gx[0] - gx[gobj]) > 40) && (gt[gobj] != 2))
+				continue;
+			if ((Math.abs(gy[0] - gy[gobj]) > 40) && (gt[gobj] != 2))
+				continue;
+			doGobj(g, gobj);
+		}
+	}
+
+	private void initialize() {
 		initializeVars();
 		initializeVars2();
 		generateMaze();
@@ -356,33 +360,15 @@ public class M extends KeyAdapter {
 	private void drawThings(Graphics2D g, int gobj) {
 		translate(g, gobj);
 		switch (gv[gobj]) {
-		case 1:
-			drawHeli(g, gobj);
-			break;
-		case 2:
-			drawBullet(g);
-			break;
-		case 4:
-			drawExplosion(g, gobj);
-			break;
-		case 5:
-			drawBlocks(g, gobj);
-			break;
-		case 6:
-			drawTurret(g, gobj);
-			break;
-		case 7:
-			drawMissile(g, gobj);
-			break;
-		case 8:
-			drawVerticalLaser(g, gobj);
-			break;
-		case 9:
-			drawHorizontalLazer(g, gobj);
-			break;
-		case 10:
-			drawScientist(g);
-			break;
+		case 1: drawHeli(g, gobj); break;
+		case 2: drawBullet(g); break;
+		case 4: drawExplosion(g, gobj); break;
+		case 5: drawBlocks(g, gobj); break;
+		case 6: drawTurret(g, gobj); break;
+		case 7: drawMissile(g, gobj); break;
+		case 8: drawVerticalLaser(g, gobj); break;
+		case 9: drawHorizontalLazer(g, gobj); break;
+		case 10: drawScientist(g); break;
 		}
 		translateBack(g, gobj);
 		//
@@ -580,49 +566,19 @@ public class M extends KeyAdapter {
 
 	private void collisionsWithOther(int gobj) {
 		for (int gcol = 0; gcol < 255; gcol++) {
-			if (!gu[gcol])
-				continue;
-			if (gcol == gobj)
-				continue;
-			hit = false;
-			hitSomething(gobj, gcol);
+			if (!gu[gcol]) continue; if (gcol == gobj) continue;
+			hit = false; hitSomething(gobj, gcol);
 			if (!hit) {
-				if (gbnd[gcol] == 0)
-					continue;
-				if (gbnd[gobj] == 0)
-					continue;
-				//
+				if (gbnd[gcol] == 0) continue; if (gbnd[gobj] == 0) continue;
 				calcDxDy(gobj, gcol);
 				if (dx * dx + dy * dy < (gbnd[gcol] + gbnd[gobj]) * (gbnd[gcol] + gbnd[gobj])) {
-					//
-					// HIT!
-					//
-					if (gt[gcol] == 5) {
-						getRxRy(gobj, gcol);
-						if ((rx < 0) || (ry < 0))
-							continue;
-						if ((rx > 7) || (ry > 7))
-							continue;
-						somethingHit(gobj, gcol);
-					} else {
-						hit = true;
-					}
+					if (gt[gcol] == 5) { getRxRy(gobj, gcol); if ((rx < 0) || (ry < 0)) continue; if ((rx > 7) || (ry > 7)) continue; somethingHit(gobj, gcol); } else { hit = true; }
 				}
 			}
 			if (hit) {
-				if (gt[gobj] == 1) {
-					if (gt[gcol] == 2)
-						continue;
-					if (gt[gcol] == 10) {
-						gu[gcol] = false;
-						pickupScientist();
-						continue;
-					}
-					if (invincible > 0) {
-						if (gt[gcol] != 5)
-							gu[gcol] = false;
-						continue;
-					}
+				if (gt[gobj] == 1) { if (gt[gcol] == 2) continue;
+					if (gt[gcol] == 10) { gu[gcol] = false; pickupScientist(); continue; }
+					if (invincible > 0) { if (gt[gcol] != 5) gu[gcol] = false; continue; }
 					andAnotherThingHit(gobj);
 				} else if ((gt[gobj] == 2) && ((gt[gcol] == 3) || (gt[gcol] == 6) || (gt[gcol] == 11))) {
 					anotherThingHit(gobj, gcol);
