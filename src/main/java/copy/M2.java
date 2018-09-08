@@ -35,7 +35,7 @@ public class M2 extends KeyAdapter {
 	private M2() throws Exception {
 		JFrame gameFrame = initFrame();
 		do {
-			initialize();
+			prepare();
 			while (!restart2) {
 				Graphics2D g = (Graphics2D) gameFrame.getBufferStrategy().getDrawGraphics();
 				toggle2 = !toggle2;
@@ -47,15 +47,15 @@ public class M2 extends KeyAdapter {
 	}
 
 	private void doTheGame(Graphics2D g) {
-		clearTheScreen(g);
+		whitpeTheScreen(g);
 		drawMaze(g);
 		rebirth();
-		gobJloop(g);
+		gameObjloop(g);
 		gameOver(g);
 		moreStuff(g);
 	}
 
-	private void gobJloop(Graphics2D g) {
+	private void gameObjloop(Graphics2D g) {
 		for (int gobj = 0; gobj < 255; gobj++) {
 			if (!gu2[gobj])
 				continue;
@@ -63,11 +63,11 @@ public class M2 extends KeyAdapter {
 				continue;
 			if ((Math.abs(gy2[0] - gy2[gobj]) > 40) && (gt2[gobj] != 2))
 				continue;
-			doGobj(g, gobj);
+			doGobjes(g, gobj);
 		}
 	}
 
-	private void initialize() {
+	private void prepare() {
 		initializeVars();
 		initializeVars2();
 		generateMaze();
@@ -75,13 +75,13 @@ public class M2 extends KeyAdapter {
 		morePlaceCItem();
 	}
 
-	private void doGobj(Graphics2D g, int gobj) {
-		nextPosition(gobj);
-		movement(gobj);
-		mazeCollisions(gobj);
-		collisionsWithOther(gobj);
-		stuff(gobj);
-		drawThings(g, gobj);
+	private void doGobjes(Graphics2D g, int gameobj) {
+		nextPosition(gameobj);
+		movement(gameobj);
+		mazeCollisions(gameobj);
+		collisionsWithOther(gameobj);
+		stuff(gameobj);
+		drawThings(g, gameobj);
 	}
 
 	private void nextPosition(int gobj) {
@@ -120,7 +120,7 @@ public class M2 extends KeyAdapter {
 		}
 	}
 
-	private void clearTheScreen(Graphics2D g) {
+	private void whitpeTheScreen(Graphics2D g) {
 		//
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 512, 512);
@@ -329,14 +329,14 @@ public class M2 extends KeyAdapter {
 	}
 
 	private JFrame initFrame() {
-		JFrame gameFrame = new JFrame();
-		gameFrame.setResizable(false);
-		gameFrame.setSize(512, 512);
-		gameFrame.setVisible(true);
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameFrame.createBufferStrategy(2);
-		gameFrame.addKeyListener(this);
-		return gameFrame;
+		JFrame geemFrame = new JFrame();
+		geemFrame.setResizable(false);
+		geemFrame.setSize(512, 512);
+		geemFrame.setVisible(true);
+		geemFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		geemFrame.createBufferStrategy(2);
+		geemFrame.addKeyListener(this);
+		return geemFrame;
 	}
 
 	private void moreStuff(Graphics2D g) {
@@ -824,10 +824,10 @@ public class M2 extends KeyAdapter {
 		doBullet();
 		decreaseBinh();
 		//
-		up();
 		down();
-		handleA();
+		up();
 		handleD();
+		handleA();
 		//
 		tilt();
 		//
