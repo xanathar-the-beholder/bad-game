@@ -1,19 +1,17 @@
-package complexity;
+package copy;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import sun.applet.Main;
+public class M2Test {
 
-public class ComplexityTest {
-
-	private M m;
+	private M2 m;
 	
 	@Test
 	public void should() throws Exception {
-		Main.main(new String[0]);
+		M2.main(new String[0]);
 		m.keyPressed(null);
 		m.keyReleased(null);
 		m.keyTyped(null);
