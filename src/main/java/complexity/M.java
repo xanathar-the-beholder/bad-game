@@ -129,24 +129,26 @@ public class M extends KeyAdapter {
 	private void morePlaceCItem() {
 		for (x = 2; x < 19; ++x) {
 			for (y = 2; y < 19; ++y) {
-				if (citem >= 255)
-					continue; // out of cells.
+				if (citem >= 255) continue; 
 				if (Math.random() < 0.25 + y / 40.0) {
-					if ((maze[x][y] & 3) == 2) { // open from above, closed bottom.
-						placeItem5();
-					} else if ((maze[x][y] & 3) == 3) {
-						for (t = 0; t < (y < 10 ? 1 : 2); t++) {
-							placeItem8();
-						}
-					} else if ((maze[x][y] & 12) == 12) {
-						for (t = 0; t < (y < 10 ? 1 : 2); t++) {
-							placeItem9();
-						}
-					} else if (y > 5) {
-						placeItem6();
-					}
+					if ((maze[x][y] & 3) == 2) { placeItem5();
+					} else if ((maze[x][y] & 3) == 3) { morePlaceItem8();
+					} else if ((maze[x][y] & 12) == 12) { morePlaceItem9();
+					} else if (y > 5) { placeItem6(); }
 				}
 			}
+		}
+	}
+
+	private void morePlaceItem9() {
+		for (t = 0; t < (y < 10 ? 1 : 2); t++) {
+			placeItem9();
+		}
+	}
+
+	private void morePlaceItem8() {
+		for (t = 0; t < (y < 10 ? 1 : 2); t++) {
+			placeItem8();
 		}
 	}
 
@@ -268,6 +270,11 @@ public class M extends KeyAdapter {
 		gx[0] = 15;
 		gy[0] = 15;
 		gbnd[0] = 1;
+		initializeVars4();
+		initializeVars3();
+	}
+
+	private void initializeVars4() {
 		for (t = 1; t < 5; t++) {
 			gt[t] = 2; // player bullet
 			gv[t] = 2;
@@ -275,6 +282,9 @@ public class M extends KeyAdapter {
 			gt[t + 5] = 4; // Explosion
 			gv[t + 5] = 4;
 		}
+	}
+
+	private void initializeVars3() {
 		for (t = 10; t < 20; t++) {
 			gt[t] = 11; // enemy bullet
 			gv[t] = 2;
@@ -285,11 +295,17 @@ public class M extends KeyAdapter {
 	}
 
 	private void initializeVars() {
-		gu = new boolean[256]; // In use
-		gt = new int[256]; // Type
-		gv = new int[256]; // Visual Type
-		ga = new int[256]; // animation frame
-		gp = new int[256]; // general purpose counter.
+		initializeVars5();
+		initializeVars6();
+		invincible = 100;
+		lives = 3;
+		scientists = 0;
+		binh = 0;
+		restart = false;
+		toggle = false;
+	}
+
+	private void initializeVars6() {
 		gblk = new boolean[256][8][8];
 		gbnd = new double[256]; // Bounding Sphere
 		gx = new double[256]; // X coordinates
@@ -298,12 +314,14 @@ public class M extends KeyAdapter {
 		gdy = new double[256]; // dY
 		todo = new int[20 * 20];
 		maze = new int[20][20];
-		invincible = 100;
-		lives = 3;
-		scientists = 0;
-		binh = 0;
-		restart = false;
-		toggle = false;
+	}
+
+	private void initializeVars5() {
+		gu = new boolean[256]; // In use
+		gt = new int[256]; // Type
+		gv = new int[256]; // Visual Type
+		ga = new int[256]; // animation frame
+		gp = new int[256]; // general purpose counter.
 	}
 
 	private JFrame initFrame() {
@@ -323,23 +341,31 @@ public class M extends KeyAdapter {
 		g.setColor(new Color(0, 128, 0, 128));
 		g.fillRect(-5, -5, 210, 210);
 		for (t = 0; t < 255; t++) {
-			if (gu[t]) {
-				n = gv[t];
-				if ((n == 10) || (n == 1)) {
-					g.setColor(n == 1 ? Color.WHITE : Color.CYAN);
-					g.fillRect((int) gx[t], (int) gy[t], 10, 10);
-				}
-			}
+			drawSomething(g);
 		}
 		for (t = 0; t < 4; t++) {
-			if (lives > t) {
-				g.setColor(Color.ORANGE);
-				g.fillRect(-4 + t * 20, 205, 15, 15);
+			drawLivesScientitst(g);
+		}
+	}
+
+	private void drawSomething(Graphics2D g) {
+		if (gu[t]) {
+			n = gv[t];
+			if ((n == 10) || (n == 1)) {
+				g.setColor(n == 1 ? Color.WHITE : Color.CYAN);
+				g.fillRect((int) gx[t], (int) gy[t], 10, 10);
 			}
-			if (scientists > t) {
-				g.setColor(Color.WHITE);
-				g.fillRect(186 - t * 20, 205, 15, 15);
-			}
+		}
+	}
+
+	private void drawLivesScientitst(Graphics2D g) {
+		if (lives > t) {
+			g.setColor(Color.ORANGE);
+			g.fillRect(-4 + t * 20, 205, 15, 15);
+		}
+		if (scientists > t) {
+			g.setColor(Color.WHITE);
+			g.fillRect(186 - t * 20, 205, 15, 15);
 		}
 	}
 
@@ -512,35 +538,50 @@ public class M extends KeyAdapter {
 
 	private void drawHeli(Graphics2D g, int gobj) {
 		g.rotate(gdx[gobj] * 0.4);
-		//
-		// Draw Heli
-		//
+		toggleHeli(g);
+		someMoreHeli(g);
+		if (gdx[0] >= 0.01) {
+			heliOne(g);
+		} else if (gdx[0] < -0.01) {
+			heliToo(g);
+		} else {
+			heliThree(g);
+		}
+		g.rotate(-gdx[gobj] * 0.4);
+	}
+
+	private void toggleHeli(Graphics2D g) {
 		if (invincible > 0) {
 			g.setColor(toggle ? Color.CYAN : Color.BLUE);
 		}
-		//
+	}
+
+	private void someMoreHeli(Graphics2D g) {
 		g.drawOval(-5, -5, 10, 10);
 		g.drawLine(0, -5, 0, -7);
 		g.drawLine(toggle ? -10 : 10, -7, toggle ? 3 : -3, -7);
-		if (gdx[0] >= 0.01) {
-			gdx[0] += -0.01;
-			g.drawLine(-5, 0, -12, 0);
-			g.drawLine(-5, 7, 5, 7);
-			g.drawLine(3, 7, 0, 5);
-			g.drawLine(-11, toggle ? -1 : 1, -13, toggle ? 1 : -1);
-		} else if (gdx[0] < -0.01) {
-			gdx[0] += 0.01;
-			g.drawLine(5, 0, 12, 0);
-			g.drawLine(-5, 7, 5, 7);
-			g.drawLine(-3, 7, 0, 5);
-			g.drawLine(11, toggle ? -1 : 1, 13, toggle ? 1 : -1);
-		} else {
-			gdx[0] = 0;
-			g.drawLine(0, 5, -5, 7);
-			g.drawLine(0, 5, 5, 7);
-		}
-		//
-		g.rotate(-gdx[gobj] * 0.4);
+	}
+
+	private void heliThree(Graphics2D g) {
+		gdx[0] = 0;
+		g.drawLine(0, 5, -5, 7);
+		g.drawLine(0, 5, 5, 7);
+	}
+
+	private void heliToo(Graphics2D g) {
+		gdx[0] += 0.01;
+		g.drawLine(5, 0, 12, 0);
+		g.drawLine(-5, 7, 5, 7);
+		g.drawLine(-3, 7, 0, 5);
+		g.drawLine(11, toggle ? -1 : 1, 13, toggle ? 1 : -1);
+	}
+
+	private void heliOne(Graphics2D g) {
+		gdx[0] += -0.01;
+		g.drawLine(-5, 0, -12, 0);
+		g.drawLine(-5, 7, 5, 7);
+		g.drawLine(3, 7, 0, 5);
+		g.drawLine(-11, toggle ? -1 : 1, -13, toggle ? 1 : -1);
 	}
 
 	private void stuff(int gobj) {
@@ -576,15 +617,20 @@ public class M extends KeyAdapter {
 				}
 			}
 			if (hit) {
-				if (gt[gobj] == 1) { if (gt[gcol] == 2) continue;
-					if (gt[gcol] == 10) { gu[gcol] = false; pickupScientist(); continue; }
-					if (invincible > 0) { if (gt[gcol] != 5) gu[gcol] = false; continue; }
-					andAnotherThingHit(gobj);
-				} else if ((gt[gobj] == 2) && ((gt[gcol] == 3) || (gt[gcol] == 6) || (gt[gcol] == 11))) {
-					anotherThingHit(gobj, gcol);
-				}
+				if (doContinue(gobj, gcol)) continue;
 			}
 		}
+	}
+	
+	public boolean doContinue(int gobj, int gcol) {
+		if (gt[gobj] == 1) { if (gt[gcol] == 2) return true;
+		if (gt[gcol] == 10) { gu[gcol] = false; pickupScientist(); return true; }
+		if (invincible > 0) { if (gt[gcol] != 5) gu[gcol] = false; return true; }
+		andAnotherThingHit(gobj);
+		} else if ((gt[gobj] == 2) && ((gt[gcol] == 3) || (gt[gcol] == 6) || (gt[gcol] == 11))) {
+			anotherThingHit(gobj, gcol);
+		}
+		return false;
 	}
 
 	private void pickupScientist() {
@@ -658,10 +704,7 @@ public class M extends KeyAdapter {
 	}
 
 	private void mazeCollisions(int gobj) {
-		d = ((int) nx) % 10;
-		t = ((int) ny) % 10;
-		x = ((int) nx) / 10;
-		y = ((int) ny) / 10;
+		extracted();
 		//
 		if (((t < 1) && ((maze[x][y] & 1) != 0)) || ((t >= 9) && ((maze[x][y] & 2) != 0))
 				|| ((d < 1) && ((maze[x][y] & 4) != 0)) || ((d >= 9) && ((maze[x][y] & 8) != 0))) {
@@ -677,6 +720,13 @@ public class M extends KeyAdapter {
 			gx[gobj] = nx;
 			gy[gobj] = ny;
 		}
+	}
+
+	private void extracted() {
+		d = ((int) nx) % 10;
+		t = ((int) ny) % 10;
+		x = ((int) nx) / 10;
+		y = ((int) ny) / 10;
 	}
 
 	private void anotherThingMazeColl(int gobj) {
@@ -729,12 +779,7 @@ public class M extends KeyAdapter {
 				gp[gobj] = 64;
 				for (t = 0; t < 255; t++) {
 					if ((gt[t] == 11) && (!gu[t])) {
-						gu[t] = true;
-						gx[t] = gx[gobj];
-						gy[t] = gy[gobj];
-						gdx[t] = 0.2 * Math.cos(a);
-						gdy[t] = 0.2 * Math.sin(a);
-						gv[t] = gy[gobj] > 150 ? 7 : 2;
+						doMovementSix(gobj);
 						break;
 					}
 				}
@@ -742,6 +787,15 @@ public class M extends KeyAdapter {
 		} else {
 			gp[gobj]--;
 		}
+	}
+
+	private void doMovementSix(int gobj) {
+		gu[t] = true;
+		gx[t] = gx[gobj];
+		gy[t] = gy[gobj];
+		gdx[t] = 0.2 * Math.cos(a);
+		gdy[t] = 0.2 * Math.sin(a);
+		gv[t] = gy[gobj] > 150 ? 7 : 2;
 	}
 
 	private void movementOne() {
