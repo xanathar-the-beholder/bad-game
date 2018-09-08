@@ -8,7 +8,7 @@ Proof that bad code can get a 10/10 rating on `bettercodehub.com`
 
 ## Background
 
-I wrote this game for the Java4K competition back in 2008. 
+I wrote this game for the [Java4K competition](http://www.java4k.com/index.php?action=games&method=view&gid=216) back in 2009. 
 The objective of the competition is to put as much game as possible in a 4096 byte jar file.
 This results in awful code because use of methods and fields eat up bytes quickly.
 So the whole game was written mostly in the constructor, and almost all variables are local.
