@@ -39,7 +39,7 @@ This is about the number of parameters the methods consume.
 ### 1 Write Short Units of Code
 
 This is the line count of the method. 
-- use the `extract to method` feature of your IDE to break up long methods. [Good names](https://www.youtube.com/watch?v=SctS56YQ6fg) are not important because they are not scored.
+- use the `extract to method` feature of your IDE to break up long methods. [Good names](https://www.youtube.com/watch?v=SctS56YQ6fg) are not scored.
 - simply put multiple statements on one line (don't accidently apply the code formatter later!)
 - remove comments.
 
@@ -48,6 +48,9 @@ This is the line count of the method.
 This is the number of branch points in the method.
 - use the `extract to method` feature of your IDE to break up long methods.
 - use the `extract to method` feature of your IDE put conditionals in a separate method.
+
+Is a class holding lots of short and simple methods with few arguments easier to maintain? 
+Not necessarily. Read [Small functions considered harmful](https://medium.com/@copyconstruct/small-functions-considered-harmful-91035d316c29)
 
 ### 7 Keep Architecture components balanced.
 
@@ -90,5 +93,5 @@ Bettercodehub doesn't seem to detect magic values. The code is full of them :-)
 
 # Conclusion
 
-Bettergamehub in its current form is easily gamed and should not be trusted as a measure of quality without a manual code inspection.
+A fool with a tool is still a fool :-)
 
