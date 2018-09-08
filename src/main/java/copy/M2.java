@@ -9,36 +9,36 @@ import javax.swing.JFrame;
 
 public class M2 extends KeyAdapter {
 
-	int x, y, n, d, t, invincible, scientists, lives;
-	int maze[][];
-	int todo[];
-	int[] gt, gv, ga, gp;
-	boolean restart, toggle;
-	boolean[] gu;
-	boolean[][][] gblk;
-	double[] gbnd, gx, gy, gdx, gdy;
-	int mazex[] = { 0, 0, -1, 1 };
-	int mazey[] = { -1, 1, 0, 0 };
-	int binh;
-	double nx;
-	double ny;
+	int x2, y2, n2, d2, t2, invincible2, scientists2, lives2;
+	int meez[][];
+	int toedoe[];
+	int[] gt2, gv2, ga2, gp2;
+	boolean restart2, toggle2;
+	boolean[] gu2;
+	boolean[][][] gblk2;
+	double[] gbnd2, gx2, gy2, gdx2, gdy2;
+	int meezx[] = { 0, 0, -1, 1 };
+	int meezy[] = { -1, 1, 0, 0 };
+	int benh;
+	double nx2;
+	double ny2;
 	//
-	double dx;
-	double dy;
-	double a;
+	double dx2;
+	double dy2;
+	double a2;
 	//
-	boolean bullet;
-	int citem;
-	boolean hit;
-	int rx,ry;
+	boolean bullet2;
+	int citem2;
+	boolean hit2;
+	int rx2,ry2;
 
 	private M2() throws Exception {
 		JFrame gameFrame = initFrame();
 		do {
 			initialize();
-			while (!restart) {
+			while (!restart2) {
 				Graphics2D g = (Graphics2D) gameFrame.getBufferStrategy().getDrawGraphics();
-				toggle = !toggle;
+				toggle2 = !toggle2;
 				doTheGame(g);
 				gameFrame.getBufferStrategy().show();
 				Thread.sleep(20);
@@ -57,11 +57,11 @@ public class M2 extends KeyAdapter {
 
 	private void gobJloop(Graphics2D g) {
 		for (int gobj = 0; gobj < 255; gobj++) {
-			if (!gu[gobj])
+			if (!gu2[gobj])
 				continue;
-			if ((Math.abs(gx[0] - gx[gobj]) > 40) && (gt[gobj] != 2))
+			if ((Math.abs(gx2[0] - gx2[gobj]) > 40) && (gt2[gobj] != 2))
 				continue;
-			if ((Math.abs(gy[0] - gy[gobj]) > 40) && (gt[gobj] != 2))
+			if ((Math.abs(gy2[0] - gy2[gobj]) > 40) && (gt2[gobj] != 2))
 				continue;
 			doGobj(g, gobj);
 		}
@@ -85,37 +85,37 @@ public class M2 extends KeyAdapter {
 	}
 
 	private void nextPosition(int gobj) {
-		nx = gx[gobj] + gdx[gobj];
-		ny = gy[gobj] + gdy[gobj];
+		nx2 = gx2[gobj] + gdx2[gobj];
+		ny2 = gy2[gobj] + gdy2[gobj];
 		//
-		dx = gx[0] - gx[gobj];
-		dy = gy[0] - gy[gobj];
-		a = Math.atan2(dy, dx);
+		dx2 = gx2[0] - gx2[gobj];
+		dy2 = gy2[0] - gy2[gobj];
+		a2 = Math.atan2(dy2, dx2);
 		//
-		bullet = false;
+		bullet2 = false;
 	}
 
 	private void rebirth() {
-		if (invincible > 0)
-			invincible--;
-		if ((!gu[0]) && (invincible == 100)) {
-			if (lives-- > 0) {
-				gu[0] = true;
+		if (invincible2 > 0)
+			invincible2--;
+		if ((!gu2[0]) && (invincible2 == 100)) {
+			if (lives2-- > 0) {
+				gu2[0] = true;
 			}
 		}
 	}
 
 	private void drawMaze(Graphics2D g) {
-		for (x = 1; x < 19; ++x) {
-			for (y = 1; y < 19; ++y) {
-				if ((maze[x][y] & 1) != 0) /* This cell has a top wall */
-					g.drawLine(x * 10, y * 10, x * 10 + 10, y * 10);
-				if ((maze[x][y] & 2) != 0) /* This cell has a bottom wall */
-					g.drawLine(x * 10, y * 10 + 10, x * 10 + 10, y * 10 + 10);
-				if ((maze[x][y] & 4) != 0) /* This cell has a left wall */
-					g.drawLine(x * 10, y * 10, x * 10, y * 10 + 10);
-				if ((maze[x][y] & 8) != 0) /* This cell has a right wall */
-					g.drawLine(x * 10 + 10, y * 10, x * 10 + 10, y * 10 + 10);
+		for (x2 = 1; x2 < 19; ++x2) {
+			for (y2 = 1; y2 < 19; ++y2) {
+				if ((meez[x2][y2] & 1) != 0) /* This cell has a top wall */
+					g.drawLine(x2 * 10, y2 * 10, x2 * 10 + 10, y2 * 10);
+				if ((meez[x2][y2] & 2) != 0) /* This cell has a bottom wall */
+					g.drawLine(x2 * 10, y2 * 10 + 10, x2 * 10 + 10, y2 * 10 + 10);
+				if ((meez[x2][y2] & 4) != 0) /* This cell has a left wall */
+					g.drawLine(x2 * 10, y2 * 10, x2 * 10, y2 * 10 + 10);
+				if ((meez[x2][y2] & 8) != 0) /* This cell has a right wall */
+					g.drawLine(x2 * 10 + 10, y2 * 10, x2 * 10 + 10, y2 * 10 + 10);
 			}
 		}
 	}
@@ -127,85 +127,85 @@ public class M2 extends KeyAdapter {
 		g.setColor(Color.LIGHT_GRAY);
 		g.translate(256, 256);
 		g.scale(20, 20);
-		g.translate(-gx[0], -gy[0]);
+		g.translate(-gx2[0], -gy2[0]);
 	}
 
 	private void morePlaceCItem() {
-		for (x = 2; x < 19; ++x) {
-			for (y = 2; y < 19; ++y) {
-				if (citem >= 255) continue; 
-				if (Math.random() < 0.25 + y / 40.0) {
-					if ((maze[x][y] & 3) == 2) { placeItem5();
-					} else if ((maze[x][y] & 3) == 3) { morePlaceItem8();
-					} else if ((maze[x][y] & 12) == 12) { morePlaceItem9();
-					} else if (y > 5) { placeItem6(); }
+		for (x2 = 2; x2 < 19; ++x2) {
+			for (y2 = 2; y2 < 19; ++y2) {
+				if (citem2 >= 255) continue; 
+				if (Math.random() < 0.25 + y2 / 40.0) {
+					if ((meez[x2][y2] & 3) == 2) { placeItem5();
+					} else if ((meez[x2][y2] & 3) == 3) { morePlaceItem8();
+					} else if ((meez[x2][y2] & 12) == 12) { morePlaceItem9();
+					} else if (y2 > 5) { placeItem6(); }
 				}
 			}
 		}
 	}
 
 	private void morePlaceItem9() {
-		for (t = 0; t < (y < 10 ? 1 : 2); t++) {
+		for (t2 = 0; t2 < (y2 < 10 ? 1 : 2); t2++) {
 			placeItem9();
 		}
 	}
 
 	private void morePlaceItem8() {
-		for (t = 0; t < (y < 10 ? 1 : 2); t++) {
+		for (t2 = 0; t2 < (y2 < 10 ? 1 : 2); t2++) {
 			placeItem8();
 		}
 	}
 
 	private void placeItem6() {
-		gt[citem] = gv[citem] = 6; // Turret
-		gu[citem] = true;
-		gx[citem] = x * 10 + 5;
-		gy[citem] = y * 10 + 5;
-		gbnd[citem] = 1;
-		citem++;
+		gt2[citem2] = gv2[citem2] = 6; // Turret
+		gu2[citem2] = true;
+		gx2[citem2] = x2 * 10 + 5;
+		gy2[citem2] = y2 * 10 + 5;
+		gbnd2[citem2] = 1;
+		citem2++;
 	}
 
 	private void placeItem9() {
-		gt[citem] = gv[citem] = 9; // horizontal laser
-		gu[citem] = true;
-		gx[citem] = x * 10;
-		gy[citem] = y * 10 + 2 + t * 5;
-		gp[citem] = (int) (50 * Math.random());
-		citem++;
+		gt2[citem2] = gv2[citem2] = 9; // horizontal laser
+		gu2[citem2] = true;
+		gx2[citem2] = x2 * 10;
+		gy2[citem2] = y2 * 10 + 2 + t2 * 5;
+		gp2[citem2] = (int) (50 * Math.random());
+		citem2++;
 	}
 
 	private void placeItem8() {
-		gt[citem] = gv[citem] = 8; // vertical laser
-		gu[citem] = true;
-		gx[citem] = x * 10 + 2 + t * 5;
-		gp[citem] = (int) (50 * Math.random());
-		gy[citem] = y * 10;
-		citem++;
+		gt2[citem2] = gv2[citem2] = 8; // vertical laser
+		gu2[citem2] = true;
+		gx2[citem2] = x2 * 10 + 2 + t2 * 5;
+		gp2[citem2] = (int) (50 * Math.random());
+		gy2[citem2] = y2 * 10;
+		citem2++;
 	}
 
 	private void placeItem5() {
-		gt[citem] = gv[citem] = 5; // block 8*8
-		gu[citem] = true;
-		gx[citem] = x * 10 + 5;
-		gy[citem] = y * 10 + 5;
-		gbnd[citem] = 8;
-		citem++;
+		gt2[citem2] = gv2[citem2] = 5; // block 8*8
+		gu2[citem2] = true;
+		gx2[citem2] = x2 * 10 + 5;
+		gy2[citem2] = y2 * 10 + 5;
+		gbnd2[citem2] = 8;
+		citem2++;
 	}
 
 	private void placeCItem() {
-		citem = 30;
-		for (t = 0; t < 4; t++) {
+		citem2 = 30;
+		for (t2 = 0; t2 < 4; t2++) {
 			while (true) {
-				x = (int) (Math.random() * 19);
-				y = 10 + (int) (Math.random() * 9);
-				if ((maze[x][y] & 3) == 3) {
-					gt[citem] = 10; // person
-					gv[citem] = 10;
-					gu[citem] = true;
-					gx[citem] = x * 10 + 5;
-					gy[citem] = y * 10 + 8.5;
-					gbnd[citem] = 1;
-					citem++;
+				x2 = (int) (Math.random() * 19);
+				y2 = 10 + (int) (Math.random() * 9);
+				if ((meez[x2][y2] & 3) == 3) {
+					gt2[citem2] = 10; // person
+					gv2[citem2] = 10;
+					gu2[citem2] = true;
+					gx2[citem2] = x2 * 10 + 5;
+					gy2[citem2] = y2 * 10 + 8.5;
+					gbnd2[citem2] = 1;
+					citem2++;
 					break;
 				}
 			}
@@ -213,119 +213,119 @@ public class M2 extends KeyAdapter {
 	}
 
 	private void generateMaze() {
-		t = 0;
+		t2 = 0;
 		outerwalls();
-		x = 1 + (int) (Math.random() * 18);
-		y = 1 + (int) (Math.random() * 18);
+		x2 = 1 + (int) (Math.random() * 18);
+		y2 = 1 + (int) (Math.random() * 18);
 		placeSomething();
-		while (t > 0) {
+		while (t2 > 0) {
 			somethingGenerateMaze();
-			todo[n] = todo[--t];
+			toedoe[n2] = toedoe[--t2];
 			findEmptySpot();
 			placeSomthing();
 		}
 	}
 
 	private void somethingGenerateMaze() {
-		n = (int) (Math.random() * t);
-		x = todo[n] >> 16; /* the top 2 bytes of the data */
-		y = todo[n] & 65535; /* the bottom 2 bytes of the data */
+		n2 = (int) (Math.random() * t2);
+		x2 = toedoe[n2] >> 16; /* the top 2 bytes of the data */
+		y2 = toedoe[n2] & 65535; /* the bottom 2 bytes of the data */
 	}
 
 	private void placeSomthing() {
-		maze[x][y] &= ~((1 << d) | 32);
-		maze[x + mazex[d]][y + mazey[d]] &= ~(1 << (d ^ 1));
-		for (d = 0; d < 4; ++d) {
-			if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
-				todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
-				maze[x + mazex[d]][y + mazey[d]] &= ~16;
+		meez[x2][y2] &= ~((1 << d2) | 32);
+		meez[x2 + meezx[d2]][y2 + meezy[d2]] &= ~(1 << (d2 ^ 1));
+		for (d2 = 0; d2 < 4; ++d2) {
+			if ((meez[x2 + meezx[d2]][y2 + meezy[d2]] & 16) != 0) {
+				toedoe[t2++] = ((x2 + meezx[d2]) << 16) | (y2 + meezy[d2]);
+				meez[x2 + meezx[d2]][y2 + meezy[d2]] &= ~16;
 			}
 		}
 	}
 
 	private void findEmptySpot() {
 		do {
-			d = (int) (Math.random() * 4);
-		} while ((maze[x + mazex[d]][y + mazey[d]] & 32) != 0);
+			d2 = (int) (Math.random() * 4);
+		} while ((meez[x2 + meezx[d2]][y2 + meezy[d2]] & 32) != 0);
 	}
 
 	private void placeSomething() {
-		maze[x][y] &= ~48;
-		for (d = 0; d < 4; ++d) {
-			if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
-				todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
-				maze[x + mazex[d]][y + mazey[d]] &= ~16;
+		meez[x2][y2] &= ~48;
+		for (d2 = 0; d2 < 4; ++d2) {
+			if ((meez[x2 + meezx[d2]][y2 + meezy[d2]] & 16) != 0) {
+				toedoe[t2++] = ((x2 + meezx[d2]) << 16) | (y2 + meezy[d2]);
+				meez[x2 + meezx[d2]][y2 + meezy[d2]] &= ~16;
 			}
 		}
 	}
 
 	private void outerwalls() {
-		for (x = 0; x < 20; ++x) {
-			for (y = 0; y < 20; ++y) {
-				maze[x][y] = (x == 0 || x == 19 || y == 0 || y == 19) ? 32 : 63;
+		for (x2 = 0; x2 < 20; ++x2) {
+			for (y2 = 0; y2 < 20; ++y2) {
+				meez[x2][y2] = (x2 == 0 || x2 == 19 || y2 == 0 || y2 == 19) ? 32 : 63;
 			}
 		}
 	}
 
 	private void initializeVars2() {
-		gt[0] = 1; // player
-		gv[0] = 1; // player
-		gu[0] = true;
-		gx[0] = 15;
-		gy[0] = 15;
-		gbnd[0] = 1;
+		gt2[0] = 1; // player
+		gv2[0] = 1; // player
+		gu2[0] = true;
+		gx2[0] = 15;
+		gy2[0] = 15;
+		gbnd2[0] = 1;
 		initializeVars4();
 		initializeVars3();
 	}
 
 	private void initializeVars4() {
-		for (t = 1; t < 5; t++) {
-			gt[t] = 2; // player bullet
-			gv[t] = 2;
-			gbnd[t] = 0.2;
-			gt[t + 5] = 4; // Explosion
-			gv[t + 5] = 4;
+		for (t2 = 1; t2 < 5; t2++) {
+			gt2[t2] = 2; // player bullet
+			gv2[t2] = 2;
+			gbnd2[t2] = 0.2;
+			gt2[t2 + 5] = 4; // Explosion
+			gv2[t2 + 5] = 4;
 		}
 	}
 
 	private void initializeVars3() {
-		for (t = 10; t < 20; t++) {
-			gt[t] = 11; // enemy bullet
-			gv[t] = 2;
-			gbnd[t] = 0.1;
-			gt[t + 10] = 12; // enemy bullet Explosion
-			gv[t + 10] = 4;
+		for (t2 = 10; t2 < 20; t2++) {
+			gt2[t2] = 11; // enemy bullet
+			gv2[t2] = 2;
+			gbnd2[t2] = 0.1;
+			gt2[t2 + 10] = 12; // enemy bullet Explosion
+			gv2[t2 + 10] = 4;
 		}
 	}
 
 	private void initializeVars() {
 		initializeVars5();
 		initializeVars6();
-		invincible = 100;
-		lives = 3;
-		scientists = 0;
-		binh = 0;
-		restart = false;
-		toggle = false;
+		invincible2 = 100;
+		lives2 = 3;
+		scientists2 = 0;
+		benh = 0;
+		restart2 = false;
+		toggle2 = false;
 	}
 
 	private void initializeVars6() {
-		gblk = new boolean[256][8][8];
-		gbnd = new double[256]; // Bounding Sphere
-		gx = new double[256]; // X coordinates
-		gy = new double[256]; // Y coordinates
-		gdx = new double[256]; // dX
-		gdy = new double[256]; // dY
-		todo = new int[20 * 20];
-		maze = new int[20][20];
+		gblk2 = new boolean[256][8][8];
+		gbnd2 = new double[256]; // Bounding Sphere
+		gx2 = new double[256]; // X coordinates
+		gy2 = new double[256]; // Y coordinates
+		gdx2 = new double[256]; // dX
+		gdy2 = new double[256]; // dY
+		toedoe = new int[20 * 20];
+		meez = new int[20][20];
 	}
 
 	private void initializeVars5() {
-		gu = new boolean[256]; // In use
-		gt = new int[256]; // Type
-		gv = new int[256]; // Visual Type
-		ga = new int[256]; // animation frame
-		gp = new int[256]; // general purpose counter.
+		gu2 = new boolean[256]; // In use
+		gt2 = new int[256]; // Type
+		gv2 = new int[256]; // Visual Type
+		ga2 = new int[256]; // animation frame
+		gp2 = new int[256]; // general purpose counter.
 	}
 
 	private JFrame initFrame() {
@@ -344,52 +344,52 @@ public class M2 extends KeyAdapter {
 		g.scale(0.01, 0.01);
 		g.setColor(new Color(0, 128, 0, 128));
 		g.fillRect(-5, -5, 210, 210);
-		for (t = 0; t < 255; t++) {
+		for (t2 = 0; t2 < 255; t2++) {
 			drawSomething(g);
 		}
-		for (t = 0; t < 4; t++) {
+		for (t2 = 0; t2 < 4; t2++) {
 			drawLivesScientitst(g);
 		}
 	}
 
 	private void drawSomething(Graphics2D g) {
-		if (gu[t]) {
-			n = gv[t];
-			if ((n == 10) || (n == 1)) {
-				g.setColor(n == 1 ? Color.WHITE : Color.CYAN);
-				g.fillRect((int) gx[t], (int) gy[t], 10, 10);
+		if (gu2[t2]) {
+			n2 = gv2[t2];
+			if ((n2 == 10) || (n2 == 1)) {
+				g.setColor(n2 == 1 ? Color.WHITE : Color.CYAN);
+				g.fillRect((int) gx2[t2], (int) gy2[t2], 10, 10);
 			}
 		}
 	}
 
 	private void drawLivesScientitst(Graphics2D g) {
-		if (lives > t) {
+		if (lives2 > t2) {
 			g.setColor(Color.ORANGE);
-			g.fillRect(-4 + t * 20, 205, 15, 15);
+			g.fillRect(-4 + t2 * 20, 205, 15, 15);
 		}
-		if (scientists > t) {
+		if (scientists2 > t2) {
 			g.setColor(Color.WHITE);
-			g.fillRect(186 - t * 20, 205, 15, 15);
+			g.fillRect(186 - t2 * 20, 205, 15, 15);
 		}
 	}
 
 	private void gameOver(Graphics2D g) {
-		g.translate(gx[0], gy[0]);
+		g.translate(gx2[0], gy2[0]);
 		g.setColor(Color.WHITE);
 		g.setFont(g.getFont().deriveFont(4f));
-		if ((lives < 0) || (scientists == 4)) {
-			g.drawString(lives < 0 ? "Game Over" : "Well Done", -10, 0);
-			restart = k[KeyEvent.VK_SPACE];
-			gx[0] += 0.1;
-			if (gx[0] > 210) {
-				gx[0] = -10;
+		if ((lives2 < 0) || (scientists2 == 4)) {
+			g.drawString(lives2 < 0 ? "Game Over" : "Well Done", -10, 0);
+			restart2 = k[KeyEvent.VK_SPACE];
+			gx2[0] += 0.1;
+			if (gx2[0] > 210) {
+				gx2[0] = -10;
 			}
 		}
 	}
 
 	private void drawThings(Graphics2D g, int gobj) {
 		translate(g, gobj);
-		switch (gv[gobj]) {
+		switch (gv2[gobj]) {
 		case 1: drawHeli(g, gobj); break;
 		case 2: drawBullet(g); break;
 		case 4: drawExplosion(g, gobj); break;
@@ -406,11 +406,11 @@ public class M2 extends KeyAdapter {
 
 	private void translateBack(Graphics2D g, int gobj) {
 		g.scale(10, 10);
-		g.translate(-gx[gobj], -gy[gobj]);
+		g.translate(-gx2[gobj], -gy2[gobj]);
 	}
 
 	private void translate(Graphics2D g, int gobj) {
-		g.translate(gx[gobj], gy[gobj]);
+		g.translate(gx2[gobj], gy2[gobj]);
 		g.scale(0.1, 0.1);
 		g.setColor(Color.WHITE);
 	}
@@ -430,8 +430,8 @@ public class M2 extends KeyAdapter {
 		// horizontal laser
 		g.drawLine(0, 0, 10, 0);
 		g.drawLine(90, 0, 100, 0);
-		if (gp[gobj] % 100 > 50) {
-			g.setColor(toggle ? Color.RED : Color.YELLOW);
+		if (gp2[gobj] % 100 > 50) {
+			g.setColor(toggle2 ? Color.RED : Color.YELLOW);
 			g.drawLine(10, 0, 90, 0);
 		}
 	}
@@ -440,46 +440,46 @@ public class M2 extends KeyAdapter {
 		// vertical laser
 		g.drawLine(0, 0, 0, 10);
 		g.drawLine(0, 90, 0, 100);
-		if (gp[gobj] % 100 > 50) {
-			g.setColor(toggle ? Color.RED : Color.YELLOW);
+		if (gp2[gobj] % 100 > 50) {
+			g.setColor(toggle2 ? Color.RED : Color.YELLOW);
 			g.drawLine(0, 10, 0, 90);
 		}
 	}
 
 	private void drawMissile(Graphics2D g, int gobj) {
 		// Missile
-		a = Math.atan2(gdy[gobj], gdx[gobj]);
-		g.rotate(a);
+		a2 = Math.atan2(gdy2[gobj], gdx2[gobj]);
+		g.rotate(a2);
 		g.drawLine(1, -1, 4, 0);
 		g.drawLine(1, 1, 4, 0);
 		g.drawLine(1, 1, 1, -1);
-		g.setColor(toggle ? Color.RED : Color.ORANGE);
+		g.setColor(toggle2 ? Color.RED : Color.ORANGE);
 		g.drawLine(0, -1, -2, 0);
 		g.drawLine(0, 1, -2, 0);
 		// g.drawLine(0, 1, 0,-1);
-		g.rotate(-a);
+		g.rotate(-a2);
 		//
 	}
 
 	private void drawTurret(Graphics2D g, int gobj) {
 		// Turrets
-		a = Math.toRadians(ga[gobj]);
+		a2 = Math.toRadians(ga2[gobj]);
 		g.setColor(Color.RED);
 		g.drawOval(-5, -5, 10, 10);
-		g.rotate(a);
+		g.rotate(a2);
 		g.setColor(Color.YELLOW);
 		g.drawLine(5, 0, 8, 0);
-		g.rotate(-a);
+		g.rotate(-a2);
 		//
 	}
 
 	private void drawBlocks(Graphics2D g, int gobj) {
 		// Blocks
 		// g.setColor(Color.CYAN);
-		for (y = 0; y < 8; y++) {
-			for (x = 0; x < 8; x++) {
-				if (!gblk[gobj][y][x]) {
-					g.fillRect(-43 + x * 11, -43 + y * 11, 9, 9);
+		for (y2 = 0; y2 < 8; y2++) {
+			for (x2 = 0; x2 < 8; x2++) {
+				if (!gblk2[gobj][y2][x2]) {
+					g.fillRect(-43 + x2 * 11, -43 + y2 * 11, 9, 9);
 				}
 			}
 		}
@@ -487,7 +487,7 @@ public class M2 extends KeyAdapter {
 
 	private void drawExplosion(Graphics2D g, int gobj) {
 		// Explosion
-		switch (ga[gobj]) {
+		switch (ga2[gobj]) {
 		case 0:
 			drawRed(g, gobj);
 			break;
@@ -501,19 +501,19 @@ public class M2 extends KeyAdapter {
 			drawDefault(g, gobj);
 			break;
 		}
-		ga[gobj]--;
+		ga2[gobj]--;
 	}
 
 	private void drawDefault(Graphics2D g, int gobj) {
-		for (t = 0; t < 8; t++) {
+		for (t2 = 0; t2 < 8; t2++) {
 			g.setColor(new Color(255, 128 + (int) (127 * Math.random()), 0, (int) (255 * Math.random())));
 			g.fillOval((int) (-12 * Math.random()), (int) (-6 * Math.random()), 12, 6);
 		}
-		if (ga[gobj] > 8) {
-			for (t = 0; t < 3; t++) {
+		if (ga2[gobj] > 8) {
+			for (t2 = 0; t2 < 3; t2++) {
 				g.setColor(new Color(128 + (int) (127 * Math.random()), 128 + (int) (127 * Math.random()), 255));
-				g.drawLine(0, 0, -ga[gobj] / 2 + (int) (ga[gobj] * Math.random()),
-						-ga[gobj] / 2 + (int) (ga[gobj] * Math.random()));
+				g.drawLine(0, 0, -ga2[gobj] / 2 + (int) (ga2[gobj] * Math.random()),
+						-ga2[gobj] / 2 + (int) (ga2[gobj] * Math.random()));
 			}
 		}
 	}
@@ -531,7 +531,7 @@ public class M2 extends KeyAdapter {
 	private void drawRed(Graphics2D g, int gobj) {
 		g.setColor(Color.RED);
 		g.fillOval(-3, -2, 6, 4);
-		gu[gobj] = false;
+		gu2[gobj] = false;
 	}
 
 	private void drawBullet(Graphics2D g) {
@@ -541,64 +541,64 @@ public class M2 extends KeyAdapter {
 	}
 
 	private void drawHeli(Graphics2D g, int gobj) {
-		g.rotate(gdx[gobj] * 0.4);
+		g.rotate(gdx2[gobj] * 0.4);
 		toggleHeli(g);
 		someMoreHeli(g);
-		if (gdx[0] >= 0.01) {
+		if (gdx2[0] >= 0.01) {
 			heliOne(g);
-		} else if (gdx[0] < -0.01) {
+		} else if (gdx2[0] < -0.01) {
 			heliToo(g);
 		} else {
 			heliThree(g);
 		}
-		g.rotate(-gdx[gobj] * 0.4);
+		g.rotate(-gdx2[gobj] * 0.4);
 	}
 
 	private void toggleHeli(Graphics2D g) {
-		if (invincible > 0) {
-			g.setColor(toggle ? Color.CYAN : Color.BLUE);
+		if (invincible2 > 0) {
+			g.setColor(toggle2 ? Color.CYAN : Color.BLUE);
 		}
 	}
 
 	private void someMoreHeli(Graphics2D g) {
 		g.drawOval(-5, -5, 10, 10);
 		g.drawLine(0, -5, 0, -7);
-		g.drawLine(toggle ? -10 : 10, -7, toggle ? 3 : -3, -7);
+		g.drawLine(toggle2 ? -10 : 10, -7, toggle2 ? 3 : -3, -7);
 	}
 
 	private void heliThree(Graphics2D g) {
-		gdx[0] = 0;
+		gdx2[0] = 0;
 		g.drawLine(0, 5, -5, 7);
 		g.drawLine(0, 5, 5, 7);
 	}
 
 	private void heliToo(Graphics2D g) {
-		gdx[0] += 0.01;
+		gdx2[0] += 0.01;
 		g.drawLine(5, 0, 12, 0);
 		g.drawLine(-5, 7, 5, 7);
 		g.drawLine(-3, 7, 0, 5);
-		g.drawLine(11, toggle ? -1 : 1, 13, toggle ? 1 : -1);
+		g.drawLine(11, toggle2 ? -1 : 1, 13, toggle2 ? 1 : -1);
 	}
 
 	private void heliOne(Graphics2D g) {
-		gdx[0] += -0.01;
+		gdx2[0] += -0.01;
 		g.drawLine(-5, 0, -12, 0);
 		g.drawLine(-5, 7, 5, 7);
 		g.drawLine(3, 7, 0, 5);
-		g.drawLine(-11, toggle ? -1 : 1, -13, toggle ? 1 : -1);
+		g.drawLine(-11, toggle2 ? -1 : 1, -13, toggle2 ? 1 : -1);
 	}
 
 	private void stuff(int gobj) {
-		if ((gt[gobj] == 1) && (bullet)) {
-			for (t = 0; t < 255; t++) {
-				if ((gt[t] == 2) && (!gu[t])) {
-					gu[t] = true; gx[t] = gx[0]; gy[t] = gy[0]; binh = 10;
-					if (gdx[0] == 0) {
-						gdx[t] = 0;
-						gdy[t] = 0.3;
+		if ((gt2[gobj] == 1) && (bullet2)) {
+			for (t2 = 0; t2 < 255; t2++) {
+				if ((gt2[t2] == 2) && (!gu2[t2])) {
+					gu2[t2] = true; gx2[t2] = gx2[0]; gy2[t2] = gy2[0]; benh = 10;
+					if (gdx2[0] == 0) {
+						gdx2[t2] = 0;
+						gdy2[t2] = 0.3;
 					} else {
-						gdx[t] = gdx[0] > 0 ? 0.4 : -0.4;
-						gdy[t] = gdy[0] + Math.abs(gdx[0] / 8);
+						gdx2[t2] = gdx2[0] > 0 ? 0.4 : -0.4;
+						gdy2[t2] = gdy2[0] + Math.abs(gdx2[0] / 8);
 					}
 					break;
 				}
@@ -608,38 +608,38 @@ public class M2 extends KeyAdapter {
 
 	private void collisionsWithOther(int gobj) {
 		for (int gcol = 0; gcol < 255; gcol++) {
-			if (!gu[gcol]) continue; 
+			if (!gu2[gcol]) continue; 
 			if (gcol == gobj) continue;
-			hit = false; hitSomething(gobj, gcol);
-			if (!hit) {
+			hit2 = false; hitSomething(gobj, gcol);
+			if (!hit2) {
 				if (anotherConditionalSomething(gcol,gobj)) continue;
 				calcDxDy(gobj, gcol);
 				if (someConditional(gobj, gcol)) {
-					if (gt[gcol] == 5) { getRxRy(gobj, gcol); if (outofBounds()) continue; somethingHit(gobj, gcol); } else { hit = true; }
+					if (gt2[gcol] == 5) { getRxRy(gobj, gcol); if (outofBounds()) continue; somethingHit(gobj, gcol); } else { hit2 = true; }
 				}
 			} 
-			if (hit) {
+			if (hit2) {
 				doContinue(gobj, gcol);
 			}
 		}
 	}
 	
 	private boolean anotherConditionalSomething(int gcol, int gobj) {
-		return (gbnd[gcol] == 0) || (gbnd[gobj] == 0);
+		return (gbnd2[gcol] == 0) || (gbnd2[gobj] == 0);
 	}
 
 	private boolean outofBounds() {
-		return ((rx < 0) || (ry < 0)) || ((rx > 7) || (ry > 7));
+		return ((rx2 < 0) || (ry2 < 0)) || ((rx2 > 7) || (ry2 > 7));
 	}
 
 	private boolean someConditional(int gobj, int gcol) {
-		return dx * dx + dy * dy < (gbnd[gcol] + gbnd[gobj]) * (gbnd[gcol] + gbnd[gobj]);
+		return dx2 * dx2 + dy2 * dy2 < (gbnd2[gcol] + gbnd2[gobj]) * (gbnd2[gcol] + gbnd2[gobj]);
 	}
 	
 	public boolean doContinue(int gobj, int gcol) {
-		if (gt[gobj] == 1) { if (gt[gcol] == 2) return true;
-		if (gt[gcol] == 10) { gu[gcol] = false; pickupScientist(); return true; }
-		if (invincible > 0) { if (gt[gcol] != 5) gu[gcol] = false; return true; }
+		if (gt2[gobj] == 1) { if (gt2[gcol] == 2) return true;
+		if (gt2[gcol] == 10) { gu2[gcol] = false; pickupScientist(); return true; }
+		if (invincible2 > 0) { if (gt2[gcol] != 5) gu2[gcol] = false; return true; }
 		andAnotherThingHit(gobj);
 		} else if (anotherConditionExtraction(gobj, gcol)) {
 			anotherThingHit(gobj, gcol);
@@ -648,52 +648,52 @@ public class M2 extends KeyAdapter {
 	}
 
 	private boolean anotherConditionExtraction(int gobj, int gcol) {
-		return (gt[gobj] == 2) && ((gt[gcol] == 3) || (gt[gcol] == 6) || (gt[gcol] == 11));
+		return (gt2[gobj] == 2) && ((gt2[gcol] == 3) || (gt2[gcol] == 6) || (gt2[gcol] == 11));
 	}
 
 	private void pickupScientist() {
-		scientists++;
-		lives++;
+		scientists2++;
+		lives2++;
 	}
 
 	private void calcDxDy(int gobj, int gcol) {
-		dx = gx[gcol] - gx[gobj];
-		dy = gy[gcol] - gy[gobj];
+		dx2 = gx2[gcol] - gx2[gobj];
+		dy2 = gy2[gcol] - gy2[gobj];
 	}
 
 	private void getRxRy(int gobj, int gcol) {
-		rx = (int) Math.floor(0.88 * (gx[gobj] - gx[gcol]) + 4);
-		ry = (int) Math.floor(0.88 * (gy[gobj] - gy[gcol]) + 4);
+		rx2 = (int) Math.floor(0.88 * (gx2[gobj] - gx2[gcol]) + 4);
+		ry2 = (int) Math.floor(0.88 * (gy2[gobj] - gy2[gcol]) + 4);
 	}
 
 	private void andAnotherThingHit(int gobj) {
-		gu[gobj] = false;
-		gu[6] = true;
-		gx[6] = gx[gobj];
-		gy[6] = gy[gobj];
-		ga[6] = 16;
-		invincible = 200;
+		gu2[gobj] = false;
+		gu2[6] = true;
+		gx2[6] = gx2[gobj];
+		gy2[6] = gy2[gobj];
+		ga2[6] = 16;
+		invincible2 = 200;
 	}
 
 	private void anotherThingHit(int gobj, int gcol) {
-		gu[gcol] = false;
-		gu[gobj] = false;
-		gu[gobj + 5] = true;
-		gx[gobj + 5] = gx[gcol];
-		gy[gobj + 5] = gy[gcol];
-		ga[gobj + 5] = 12;
+		gu2[gcol] = false;
+		gu2[gobj] = false;
+		gu2[gobj + 5] = true;
+		gx2[gobj + 5] = gx2[gcol];
+		gy2[gobj + 5] = gy2[gcol];
+		ga2[gobj + 5] = 12;
 	}
 
 	private void hitSomething(int gobj, int gcol) {
-		if ((gt[gcol] == 8) || (gt[gcol] == 9)) {
-			if (gp[gcol] % 100 > 50) {
-				if (gt[gcol] == 8) {
-					if ((gy[gobj] - gy[gcol] < 9) && (gy[gobj] - gy[gcol] > 0)) {
-						hit = (Math.abs(gx[gcol] - gx[gobj]) < 1);
+		if ((gt2[gcol] == 8) || (gt2[gcol] == 9)) {
+			if (gp2[gcol] % 100 > 50) {
+				if (gt2[gcol] == 8) {
+					if ((gy2[gobj] - gy2[gcol] < 9) && (gy2[gobj] - gy2[gcol] > 0)) {
+						hit2 = (Math.abs(gx2[gcol] - gx2[gobj]) < 1);
 					}
 				} else {
-					if ((gx[gobj] - gx[gcol] < 9) && (gx[gobj] - gx[gcol] > 1)) {
-						hit = (Math.abs(gy[gcol] - gy[gobj]) < 1);
+					if ((gx2[gobj] - gx2[gcol] < 9) && (gx2[gobj] - gx2[gcol] > 1)) {
+						hit2 = (Math.abs(gy2[gcol] - gy2[gobj]) < 1);
 					}
 				}
 			}
@@ -701,21 +701,21 @@ public class M2 extends KeyAdapter {
 	}
 
 	private void somethingHit(int gobj, int gcol) {
-		if (!gblk[gcol][ry][rx]) {
-			gblk[gcol][ry][rx] = true;
-			switch (gt[gobj]) {
+		if (!gblk2[gcol][ry2][rx2]) {
+			gblk2[gcol][ry2][rx2] = true;
+			switch (gt2[gobj]) {
 			case 1:
-				hit = true;
+				hit2 = true;
 				break;
 			case 2:
 				// plr bullet
-				gu[gobj + 5] = true;
-				gx[gobj + 5] = gx[gobj];// +rx*1.125-4;
-				gy[gobj + 5] = gy[gobj];// +ry*1.125-4;
-				ga[gobj + 5] = 4;
+				gu2[gobj + 5] = true;
+				gx2[gobj + 5] = gx2[gobj];// +rx*1.125-4;
+				gy2[gobj + 5] = gy2[gobj];// +ry*1.125-4;
+				ga2[gobj + 5] = 4;
 			case 11:
 				// enemy bullet
-				gu[gobj] = false;
+				gu2[gobj] = false;
 				break;
 			}
 		}
@@ -725,50 +725,50 @@ public class M2 extends KeyAdapter {
 		whichCell();
 		//
 		if (isCollistion()) {
-			gdx[gobj] = 0;
-			gdy[gobj] = 0;
-			if (gt[gobj] == 2) {
+			gdx2[gobj] = 0;
+			gdy2[gobj] = 0;
+			if (gt2[gobj] == 2) {
 				somethingMazeColl(gobj);
 			}
-			if (gt[gobj] == 11) {
+			if (gt2[gobj] == 11) {
 				anotherThingMazeColl(gobj);
 			}
 		} else {
-			gx[gobj] = nx;
-			gy[gobj] = ny;
+			gx2[gobj] = nx2;
+			gy2[gobj] = ny2;
 		}
 	}
 
 	private boolean isCollistion() {
-		return ((t < 1) && ((maze[x][y] & 1) != 0)) || ((t >= 9) && ((maze[x][y] & 2) != 0))
-				|| ((d < 1) && ((maze[x][y] & 4) != 0)) || ((d >= 9) && ((maze[x][y] & 8) != 0));
+		return ((t2 < 1) && ((meez[x2][y2] & 1) != 0)) || ((t2 >= 9) && ((meez[x2][y2] & 2) != 0))
+				|| ((d2 < 1) && ((meez[x2][y2] & 4) != 0)) || ((d2 >= 9) && ((meez[x2][y2] & 8) != 0));
 	}
 
 	private void whichCell() {
-		d = ((int) nx) % 10;
-		t = ((int) ny) % 10;
-		x = ((int) nx) / 10;
-		y = ((int) ny) / 10;
+		d2 = ((int) nx2) % 10;
+		t2 = ((int) ny2) % 10;
+		x2 = ((int) nx2) / 10;
+		y2 = ((int) ny2) / 10;
 	}
 
 	private void anotherThingMazeColl(int gobj) {
-		gu[gobj] = false;
-		gu[gobj + 10] = true;
-		gx[gobj + 10] = gx[gobj];
-		gy[gobj + 10] = gy[gobj];
-		ga[gobj + 10] = 1;
+		gu2[gobj] = false;
+		gu2[gobj + 10] = true;
+		gx2[gobj + 10] = gx2[gobj];
+		gy2[gobj + 10] = gy2[gobj];
+		ga2[gobj + 10] = 1;
 	}
 
 	private void somethingMazeColl(int gobj) {
-		gu[gobj] = false;
-		gu[gobj + 5] = true;
-		gx[gobj + 5] = gx[gobj];
-		gy[gobj + 5] = gy[gobj];
-		ga[gobj + 5] = 1;
+		gu2[gobj] = false;
+		gu2[gobj + 5] = true;
+		gx2[gobj + 5] = gx2[gobj];
+		gy2[gobj + 5] = gy2[gobj];
+		ga2[gobj + 5] = 1;
 	}
 
 	private void movement(int gobj) {
-		switch (gt[gobj]) {
+		switch (gt2[gobj]) {
 		case 1:
 			movementOne();
 			break;
@@ -780,44 +780,44 @@ public class M2 extends KeyAdapter {
 			break;
 		case 8:
 		case 9:
-			gp[gobj]++;
+			gp2[gobj]++;
 			break;
 		}
 	}
 
 	private void movementEleven(int gobj) {
-		if (gv[gobj] == 7) {
-			gdx[gobj] += (gdx[gobj] < 0.15 * Math.cos(a) ? 0.005 : -0.005);
-			gdy[gobj] += (gdy[gobj] < 0.15 * Math.sin(a) ? 0.005 : -0.005);
+		if (gv2[gobj] == 7) {
+			gdx2[gobj] += (gdx2[gobj] < 0.15 * Math.cos(a2) ? 0.005 : -0.005);
+			gdy2[gobj] += (gdy2[gobj] < 0.15 * Math.sin(a2) ? 0.005 : -0.005);
 		}
 	}
 
 	private void movementSix(int gobj) {
 		//
-		ga[gobj] = (int) Math.toDegrees(a);
+		ga2[gobj] = (int) Math.toDegrees(a2);
 		//
-		if (gp[gobj] <= 0) {
-			if (Math.abs(dx * dx + dy * dy) < 200) {
-				gp[gobj] = 64;
-				for (t = 0; t < 255; t++) {
-					if ((gt[t] == 11) && (!gu[t])) {
+		if (gp2[gobj] <= 0) {
+			if (Math.abs(dx2 * dx2 + dy2 * dy2) < 200) {
+				gp2[gobj] = 64;
+				for (t2 = 0; t2 < 255; t2++) {
+					if ((gt2[t2] == 11) && (!gu2[t2])) {
 						doMovementSix(gobj);
 						break;
 					}
 				}
 			}
 		} else {
-			gp[gobj]--;
+			gp2[gobj]--;
 		}
 	}
 
 	private void doMovementSix(int gobj) {
-		gu[t] = true;
-		gx[t] = gx[gobj];
-		gy[t] = gy[gobj];
-		gdx[t] = 0.2 * Math.cos(a);
-		gdy[t] = 0.2 * Math.sin(a);
-		gv[t] = gy[gobj] > 150 ? 7 : 2;
+		gu2[t2] = true;
+		gx2[t2] = gx2[gobj];
+		gy2[t2] = gy2[gobj];
+		gdx2[t2] = 0.2 * Math.cos(a2);
+		gdy2[t2] = 0.2 * Math.sin(a2);
+		gv2[t2] = gy2[gobj] > 150 ? 7 : 2;
 	}
 
 	private void movementOne() {
@@ -834,42 +834,42 @@ public class M2 extends KeyAdapter {
 	}
 
 	private void doBullet() {
-		bullet = k[KeyEvent.VK_SPACE] && (binh == 0);
+		bullet2 = k[KeyEvent.VK_SPACE] && (benh == 0);
 	}
 
 	private void decreaseBinh() {
-		if (binh > 0)
-			binh--;
+		if (benh > 0)
+			benh--;
 	}
 
 	private void tilt() {
-		if (gdy[0] > 0.02) {
-			gdy[0] += -0.01;
-		} else if (gdy[0] < 0) {
-			gdy[0] += 0.01;
+		if (gdy2[0] > 0.02) {
+			gdy2[0] += -0.01;
+		} else if (gdy2[0] < 0) {
+			gdy2[0] += 0.01;
 		} else {
-			gdy[0] = 0.01;
+			gdy2[0] = 0.01;
 		}
 	}
 
 	private void handleD() {
-		if ((k[KeyEvent.VK_D]) && (gdx[0] < 0.3))
-			gdx[0] += 0.05;
+		if ((k[KeyEvent.VK_D]) && (gdx2[0] < 0.3))
+			gdx2[0] += 0.05;
 	}
 
 	private void handleA() {
-		if ((k[KeyEvent.VK_A]) && (gdx[0] > -0.3))
-			gdx[0] += -0.05;
+		if ((k[KeyEvent.VK_A]) && (gdx2[0] > -0.3))
+			gdx2[0] += -0.05;
 	}
 
 	private void down() {
-		if ((k[KeyEvent.VK_S]) && (gdy[0] < 0.2))
-			gdy[0] += 0.05;
+		if ((k[KeyEvent.VK_S]) && (gdy2[0] < 0.2))
+			gdy2[0] += 0.05;
 	}
 
 	private void up() {
-		if ((k[KeyEvent.VK_W]) && (gdy[0] > -0.2))
-			gdy[0] += -0.05;
+		if ((k[KeyEvent.VK_W]) && (gdy2[0] > -0.2))
+			gdy2[0] += -0.05;
 	}
 
 	public void keyPressed(KeyEvent e) {
