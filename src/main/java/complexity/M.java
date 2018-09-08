@@ -30,6 +30,7 @@ public class M extends KeyAdapter {
 	boolean bullet;
 	int citem;
 	boolean hit;
+	int rx,ry;
 
 	private M() throws Exception {
 		JFrame gameFrame = initFrame();
@@ -52,7 +53,7 @@ public class M extends KeyAdapter {
 						continue;
 					if ((Math.abs(gy[0] - gy[gobj]) > 40) && (gt[gobj] != 2))
 						continue;
-					extracted(g, gobj);
+					doGobj(g, gobj);
 				}
 				gameOver(g);
 				moreStuff(g);
@@ -62,7 +63,7 @@ public class M extends KeyAdapter {
 		} while (true);
 	}
 
-	private void extracted(Graphics2D g, int gobj) {
+	private void doGobj(Graphics2D g, int gobj) {
 		nextPosition(gobj);
 		movement(gobj);
 		mazeCollisions(gobj);
@@ -520,27 +521,25 @@ public class M extends KeyAdapter {
 			if (gcol == gobj)
 				continue;
 			hit = false;
-			hit = hitSomething(gobj, gcol, hit);
+			hitSomething(gobj, gcol);
 			if (!hit) {
 				if (gbnd[gcol] == 0)
 					continue;
 				if (gbnd[gobj] == 0)
 					continue;
 				//
-				dx = gx[gcol] - gx[gobj];
-				dy = gy[gcol] - gy[gobj];
+				calcDxDy(gobj, gcol);
 				if (dx * dx + dy * dy < (gbnd[gcol] + gbnd[gobj]) * (gbnd[gcol] + gbnd[gobj])) {
 					//
 					// HIT!
 					//
 					if (gt[gcol] == 5) {
-						int rx = (int) Math.floor(0.88 * (gx[gobj] - gx[gcol]) + 4);
-						int ry = (int) Math.floor(0.88 * (gy[gobj] - gy[gcol]) + 4);
+						getRxRy(gobj, gcol);
 						if ((rx < 0) || (ry < 0))
 							continue;
 						if ((rx > 7) || (ry > 7))
 							continue;
-						somethingHit(gobj, gcol, rx, ry);
+						somethingHit(gobj, gcol);
 					} else {
 						hit = true;
 					}
@@ -552,8 +551,7 @@ public class M extends KeyAdapter {
 						continue;
 					if (gt[gcol] == 10) {
 						gu[gcol] = false;
-						scientists++;
-						lives++;
+						pickupScientist();
 						continue;
 					}
 					if (invincible > 0) {
@@ -567,6 +565,21 @@ public class M extends KeyAdapter {
 				}
 			}
 		}
+	}
+
+	private void pickupScientist() {
+		scientists++;
+		lives++;
+	}
+
+	private void calcDxDy(int gobj, int gcol) {
+		dx = gx[gcol] - gx[gobj];
+		dy = gy[gcol] - gy[gobj];
+	}
+
+	private void getRxRy(int gobj, int gcol) {
+		rx = (int) Math.floor(0.88 * (gx[gobj] - gx[gcol]) + 4);
+		ry = (int) Math.floor(0.88 * (gy[gobj] - gy[gcol]) + 4);
 	}
 
 	private void andAnotherThingHit(int gobj) {
@@ -587,7 +600,7 @@ public class M extends KeyAdapter {
 		ga[gobj + 5] = 12;
 	}
 
-	private boolean hitSomething(int gobj, int gcol, boolean hit) {
+	private void hitSomething(int gobj, int gcol) {
 		if ((gt[gcol] == 8) || (gt[gcol] == 9)) {
 			if (gp[gcol] % 100 > 50) {
 				if (gt[gcol] == 8) {
@@ -601,10 +614,9 @@ public class M extends KeyAdapter {
 				}
 			}
 		}
-		return hit;
 	}
 
-	private void somethingHit(int gobj, int gcol, int rx, int ry) {
+	private void somethingHit(int gobj, int gcol) {
 		if (!gblk[gcol][ry][rx]) {
 			gblk[gcol][ry][rx] = true;
 			switch (gt[gobj]) {
@@ -636,23 +648,31 @@ public class M extends KeyAdapter {
 			gdx[gobj] = 0;
 			gdy[gobj] = 0;
 			if (gt[gobj] == 2) {
-				gu[gobj] = false;
-				gu[gobj + 5] = true;
-				gx[gobj + 5] = gx[gobj];
-				gy[gobj + 5] = gy[gobj];
-				ga[gobj + 5] = 1;
+				somethingMazeColl(gobj);
 			}
 			if (gt[gobj] == 11) {
-				gu[gobj] = false;
-				gu[gobj + 10] = true;
-				gx[gobj + 10] = gx[gobj];
-				gy[gobj + 10] = gy[gobj];
-				ga[gobj + 10] = 1;
+				anotherThingMazeColl(gobj);
 			}
 		} else {
 			gx[gobj] = nx;
 			gy[gobj] = ny;
 		}
+	}
+
+	private void anotherThingMazeColl(int gobj) {
+		gu[gobj] = false;
+		gu[gobj + 10] = true;
+		gx[gobj + 10] = gx[gobj];
+		gy[gobj + 10] = gy[gobj];
+		ga[gobj + 10] = 1;
+	}
+
+	private void somethingMazeColl(int gobj) {
+		gu[gobj] = false;
+		gu[gobj + 5] = true;
+		gx[gobj + 5] = gx[gobj];
+		gy[gobj + 5] = gy[gobj];
+		ga[gobj + 5] = 1;
 	}
 
 	private void movement(int gobj) {
