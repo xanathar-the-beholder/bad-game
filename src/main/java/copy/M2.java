@@ -32,6 +32,9 @@ public class M2 extends KeyAdapter {
 	boolean hit2;
 	int rx2,ry2;
 
+	private boolean[] k = new boolean[65538];
+
+
 	private M2() throws Exception {
 		JFrame gameFrame = initFrame();
 		do {
@@ -387,20 +390,20 @@ public class M2 extends KeyAdapter {
 		}
 	}
 
-	private void drawThings(Graphics2D g, int gobj) {
-		translate(g, gobj);
-		switch (gv2[gobj]) {
-		case 1: drawHeli(g, gobj); break;
+	private void drawThings(Graphics2D g, int gameObj) {
+		translate(g, gameObj);
+		switch (gv2[gameObj]) {
+		case 1: drawHeli(g, gameObj); break;
 		case 2: drawBullet(g); break;
-		case 4: drawExplosion(g, gobj); break;
-		case 5: drawBlocks(g, gobj); break;
-		case 6: drawTurret(g, gobj); break;
-		case 7: drawMissile(g, gobj); break;
-		case 8: drawVerticalLaser(g, gobj); break;
-		case 9: drawHorizontalLazer(g, gobj); break;
+		case 4: drawExplosion(g, gameObj); break;
+		case 5: drawBlocks(g, gameObj); break;
+		case 6: drawTurret(g, gameObj); break;
+		case 7: drawMissile(g, gameObj); break;
+		case 8: drawVerticalLaser(g, gameObj); break;
+		case 9: drawHorizontalLazer(g, gameObj); break;
 		case 10: drawScientist(g); break;
 		}
-		translateBack(g, gobj);
+		translateBack(g, gameObj);
 		//
 	}
 
@@ -415,14 +418,14 @@ public class M2 extends KeyAdapter {
 		g.setColor(Color.WHITE);
 	}
 
-	private void drawScientist(Graphics2D g) {
+	private void drawScientist(Graphics2D gr) {
 		// person 2 rescue
-		g.setColor(Color.LIGHT_GRAY);
-		g.drawOval(-2, -2, 4, 4);
-		g.drawLine(0, 2, 0, 6);
-		g.drawLine(-2, 4, 2, 4);
-		g.drawLine(0, 6, -2, 8);
-		g.drawLine(0, 6, 2, 8);
+		gr.setColor(Color.LIGHT_GRAY);
+		gr.drawOval(-2, -2, 4, 4);
+		gr.drawLine(0, 2, 0, 6);
+		gr.drawLine(-2, 4, 2, 4);
+		gr.drawLine(0, 6, -2, 8);
+		gr.drawLine(0, 6, 2, 8);
 		//
 	}
 
@@ -485,23 +488,23 @@ public class M2 extends KeyAdapter {
 		}
 	}
 
-	private void drawExplosion(Graphics2D g, int gobj) {
+	private void drawExplosion(Graphics2D gr, int gameObj) {
 		// Explosion
-		switch (ga2[gobj]) {
+		switch (ga2[gameObj]) {
 		case 0:
-			drawRed(g, gobj);
+			drawRed(gr, gameObj);
 			break;
 		case 1:
-			drawOrange(g);
+			drawOrange(gr);
 			break;
 		case 2:
-			drawYellow(g);
+			drawYellow(gr);
 			break;
 		default:
-			drawDefault(g, gobj);
+			drawDefault(gr, gameObj);
 			break;
 		}
-		ga2[gobj]--;
+		ga2[gameObj]--;
 	}
 
 	private void drawDefault(Graphics2D g, int gobj) {
@@ -518,19 +521,19 @@ public class M2 extends KeyAdapter {
 		}
 	}
 
-	private void drawYellow(Graphics2D g) {
-		g.setColor(Color.YELLOW);
-		g.fillOval(-8, -3, 16, 6);
+	private void drawYellow(Graphics2D gr) {
+		gr.setColor(Color.YELLOW);
+		gr.fillOval(-8, -3, 16, 6);
 	}
 
-	private void drawOrange(Graphics2D g) {
-		g.setColor(Color.ORANGE);
-		g.fillOval(-6, -3, 12, 6);
+	private void drawOrange(Graphics2D gr) {
+		gr.setColor(Color.ORANGE);
+		gr.fillOval(-6, -3, 12, 6);
 	}
 
-	private void drawRed(Graphics2D g, int gobj) {
-		g.setColor(Color.RED);
-		g.fillOval(-3, -2, 6, 4);
+	private void drawRed(Graphics2D gr, int gobj) {
+		gr.setColor(Color.RED);
+		gr.fillOval(-3, -2, 6, 4);
 		gu2[gobj] = false;
 	}
 
@@ -767,20 +770,20 @@ public class M2 extends KeyAdapter {
 		ga2[gobj + 5] = 1;
 	}
 
-	private void movement(int gobj) {
-		switch (gt2[gobj]) {
+	private void movement(int gameObj) {
+		switch (gt2[gameObj]) {
 		case 1:
 			movementOne();
 			break;
 		case 6:
-			movementSix(gobj);
+			movementSix(gameObj);
 			break;
 		case 11:
-			movementEleven(gobj);
+			movementEleven(gameObj);
 			break;
 		case 8:
 		case 9:
-			gp2[gobj]++;
+			gp2[gameObj]++;
 			break;
 		}
 	}
@@ -872,15 +875,13 @@ public class M2 extends KeyAdapter {
 			gdy2[0] += -0.05;
 	}
 
-	public void keyPressed(KeyEvent e) {
-		k[e.getKeyCode()] = true;
-	}
-
 	public void keyReleased(KeyEvent e) {
 		k[e.getKeyCode()] = false;
 	}
-
-	private boolean[] k = new boolean[65538];
+	
+	public void keyPressed(KeyEvent e) {
+		k[e.getKeyCode()] = true;
+	}
 
 	public static void main(String[] args) throws Exception {
 		new M2();
