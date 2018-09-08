@@ -28,196 +28,23 @@ public class M extends KeyAdapter {
 	double a;
 	//
 	boolean bullet;
+	int citem;
+	boolean hit;
 
 	private M() throws Exception {
-		//
-		JFrame gameFrame = new JFrame();
-		gameFrame.setResizable(false);
-		gameFrame.setSize(512, 512);
-		gameFrame.setVisible(true);
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameFrame.createBufferStrategy(2);
-		gameFrame.addKeyListener(this);
-		//
+		JFrame gameFrame = initFrame();
 		do {
-
-			gu = new boolean[256]; // In use
-			gt = new int[256]; // Type
-			gv = new int[256]; // Visual Type
-			ga = new int[256]; // animation frame
-			gp = new int[256]; // general purpose counter.
-			gblk = new boolean[256][8][8];
-			gbnd = new double[256]; // Bounding Sphere
-			gx = new double[256]; // X coordinates
-			gy = new double[256]; // Y coordinates
-			gdx = new double[256]; // dX
-			gdy = new double[256]; // dY
-			todo = new int[20 * 20];
-			maze = new int[20][20];
-			invincible = 100;
-			lives = 3;
-			scientists = 0;
-			binh = 0;
-			restart = false;
-			toggle = false;
-			//
-			//
-			//
-			// Build the Maze
-			//
-			//
-			gt[0] = 1; // player
-			gv[0] = 1; // player
-			gu[0] = true;
-			gx[0] = 15;
-			gy[0] = 15;
-			gbnd[0] = 1;
-			for (t = 1; t < 5; t++) {
-				gt[t] = 2; // player bullet
-				gv[t] = 2;
-				gbnd[t] = 0.2;
-				gt[t + 5] = 4; // Explosion
-				gv[t + 5] = 4;
-			}
-			for (t = 10; t < 20; t++) {
-				gt[t] = 11; // enemy bullet
-				gv[t] = 2;
-				gbnd[t] = 0.1;
-				gt[t + 10] = 12; // enemy bullet Explosion
-				gv[t + 10] = 4;
-			}
-			//
-			// Generate maze
-			//
-			t = 0;
-			for (x = 0; x < 20; ++x) {
-				for (y = 0; y < 20; ++y) {
-					maze[x][y] = (x == 0 || x == 19 || y == 0 || y == 19) ? 32 : 63;
-				}
-			}
-			x = 1 + (int) (Math.random() * 18);
-			y = 1 + (int) (Math.random() * 18);
-			maze[x][y] &= ~48;
-			for (d = 0; d < 4; ++d) {
-				if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
-					todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
-					maze[x + mazex[d]][y + mazey[d]] &= ~16;
-				}
-			}
-			while (t > 0) {
-				n = (int) (Math.random() * t);
-				x = todo[n] >> 16; /* the top 2 bytes of the data */
-				y = todo[n] & 65535; /* the bottom 2 bytes of the data */
-				todo[n] = todo[--t];
-				do {
-					d = (int) (Math.random() * 4);
-				} while ((maze[x + mazex[d]][y + mazey[d]] & 32) != 0);
-				maze[x][y] &= ~((1 << d) | 32);
-				maze[x + mazex[d]][y + mazey[d]] &= ~(1 << (d ^ 1));
-				for (d = 0; d < 4; ++d) {
-					if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
-						todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
-						maze[x + mazex[d]][y + mazey[d]] &= ~16;
-					}
-				}
-			}
-			//
-			// End of maze generation
-			//
-			int citem = 30;
-			for (t = 0; t < 4; t++) {
-				while (true) {
-					x = (int) (Math.random() * 19);
-					y = 10 + (int) (Math.random() * 9);
-					if ((maze[x][y] & 3) == 3) {
-						gt[citem] = 10; // person
-						gv[citem] = 10;
-						gu[citem] = true;
-						gx[citem] = x * 10 + 5;
-						gy[citem] = y * 10 + 8.5;
-						gbnd[citem] = 1;
-						citem++;
-						break;
-					}
-				}
-			}
-			for (x = 2; x < 19; ++x) {
-				for (y = 2; y < 19; ++y) {
-					if (citem >= 255)
-						continue; // out of cells.
-					if (Math.random() < 0.25 + y / 40.0) {
-						if ((maze[x][y] & 3) == 2) { // open from above, closed bottom.
-							gt[citem] = gv[citem] = 5; // block 8*8
-							gu[citem] = true;
-							gx[citem] = x * 10 + 5;
-							gy[citem] = y * 10 + 5;
-							gbnd[citem] = 8;
-							citem++;
-						} else if ((maze[x][y] & 3) == 3) {
-							for (t = 0; t < (y < 10 ? 1 : 2); t++) {
-								gt[citem] = gv[citem] = 8; // vertical laser
-								gu[citem] = true;
-								gx[citem] = x * 10 + 2 + t * 5;
-								gp[citem] = (int) (50 * Math.random());
-								gy[citem] = y * 10;
-								citem++;
-							}
-						} else if ((maze[x][y] & 12) == 12) {
-							for (t = 0; t < (y < 10 ? 1 : 2); t++) {
-								gt[citem] = gv[citem] = 9; // horizontal laser
-								gu[citem] = true;
-								gx[citem] = x * 10;
-								gy[citem] = y * 10 + 2 + t * 5;
-								gp[citem] = (int) (50 * Math.random());
-								citem++;
-							}
-						} else if (y > 5) {
-							gt[citem] = gv[citem] = 6; // Turret
-							gu[citem] = true;
-							gx[citem] = x * 10 + 5;
-							gy[citem] = y * 10 + 5;
-							gbnd[citem] = 1;
-							citem++;
-						}
-					}
-				}
-			}
-			//
-			//
+			initializeVars();
+			initializeVars2();
+			generateMaze();
+			placeCItem();
+			morePlaceCItem();
 			while (!restart) {
-				//
 				Graphics2D g = (Graphics2D) gameFrame.getBufferStrategy().getDrawGraphics();
-				//
-				//
 				toggle = !toggle;
-				//
-				g.setColor(Color.BLACK);
-				g.fillRect(0, 0, 512, 512);
-				g.setColor(Color.LIGHT_GRAY);
-				g.translate(256, 256);
-				g.scale(20, 20);
-				g.translate(-gx[0], -gy[0]);
-				//
-				for (x = 1; x < 19; ++x) {
-					for (y = 1; y < 19; ++y) {
-						if ((maze[x][y] & 1) != 0) /* This cell has a top wall */
-							g.drawLine(x * 10, y * 10, x * 10 + 10, y * 10);
-						if ((maze[x][y] & 2) != 0) /* This cell has a bottom wall */
-							g.drawLine(x * 10, y * 10 + 10, x * 10 + 10, y * 10 + 10);
-						if ((maze[x][y] & 4) != 0) /* This cell has a left wall */
-							g.drawLine(x * 10, y * 10, x * 10, y * 10 + 10);
-						if ((maze[x][y] & 8) != 0) /* This cell has a right wall */
-							g.drawLine(x * 10 + 10, y * 10, x * 10 + 10, y * 10 + 10);
-					}
-				}
-				// rebirth
-				if (invincible > 0)
-					invincible--;
-				if ((!gu[0]) && (invincible == 100)) {
-					if (lives-- > 0) {
-						gu[0] = true;
-					}
-				}
+				clearTheScreen(g);
+				drawMaze(g);
+				rebirth();
 				for (int gobj = 0; gobj < 255; gobj++) {
 					if (!gu[gobj])
 						continue;
@@ -225,41 +52,224 @@ public class M extends KeyAdapter {
 						continue;
 					if ((Math.abs(gy[0] - gy[gobj]) > 40) && (gt[gobj] != 2))
 						continue;
-					//
-					// Next Position, if no collision.
-					//
-					nx = gx[gobj] + gdx[gobj];
-					ny = gy[gobj] + gdy[gobj];
-					//
-					dx = gx[0] - gx[gobj];
-					dy = gy[0] - gy[gobj];
-					a = Math.atan2(dy, dx);
-					//
-					bullet = false;
-					movement(gobj);
-					//
-					// Collision detection (with maze).
-					//
-					mazeCollisions(gobj);
-					//
-					// Collision Detection with other.
-					//
-					collisionsWithOther(gobj);
-					//
-					stuff(gobj);
-					//
-					drawThings(g, gobj);
+					extracted(g, gobj);
 				}
-				//
 				gameOver(g);
-				//
 				moreStuff(g);
-				//
 				gameFrame.getBufferStrategy().show();
 				Thread.sleep(20);
-				//
 			}
 		} while (true);
+	}
+
+	private void extracted(Graphics2D g, int gobj) {
+		nextPosition(gobj);
+		movement(gobj);
+		mazeCollisions(gobj);
+		collisionsWithOther(gobj);
+		stuff(gobj);
+		drawThings(g, gobj);
+	}
+
+	private void nextPosition(int gobj) {
+		nx = gx[gobj] + gdx[gobj];
+		ny = gy[gobj] + gdy[gobj];
+		//
+		dx = gx[0] - gx[gobj];
+		dy = gy[0] - gy[gobj];
+		a = Math.atan2(dy, dx);
+		//
+		bullet = false;
+	}
+
+	private void rebirth() {
+		if (invincible > 0)
+			invincible--;
+		if ((!gu[0]) && (invincible == 100)) {
+			if (lives-- > 0) {
+				gu[0] = true;
+			}
+		}
+	}
+
+	private void drawMaze(Graphics2D g) {
+		for (x = 1; x < 19; ++x) {
+			for (y = 1; y < 19; ++y) {
+				if ((maze[x][y] & 1) != 0) /* This cell has a top wall */
+					g.drawLine(x * 10, y * 10, x * 10 + 10, y * 10);
+				if ((maze[x][y] & 2) != 0) /* This cell has a bottom wall */
+					g.drawLine(x * 10, y * 10 + 10, x * 10 + 10, y * 10 + 10);
+				if ((maze[x][y] & 4) != 0) /* This cell has a left wall */
+					g.drawLine(x * 10, y * 10, x * 10, y * 10 + 10);
+				if ((maze[x][y] & 8) != 0) /* This cell has a right wall */
+					g.drawLine(x * 10 + 10, y * 10, x * 10 + 10, y * 10 + 10);
+			}
+		}
+	}
+
+	private void clearTheScreen(Graphics2D g) {
+		//
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, 512, 512);
+		g.setColor(Color.LIGHT_GRAY);
+		g.translate(256, 256);
+		g.scale(20, 20);
+		g.translate(-gx[0], -gy[0]);
+	}
+
+	private void morePlaceCItem() {
+		for (x = 2; x < 19; ++x) {
+			for (y = 2; y < 19; ++y) {
+				if (citem >= 255)
+					continue; // out of cells.
+				if (Math.random() < 0.25 + y / 40.0) {
+					if ((maze[x][y] & 3) == 2) { // open from above, closed bottom.
+						gt[citem] = gv[citem] = 5; // block 8*8
+						gu[citem] = true;
+						gx[citem] = x * 10 + 5;
+						gy[citem] = y * 10 + 5;
+						gbnd[citem] = 8;
+						citem++;
+					} else if ((maze[x][y] & 3) == 3) {
+						for (t = 0; t < (y < 10 ? 1 : 2); t++) {
+							gt[citem] = gv[citem] = 8; // vertical laser
+							gu[citem] = true;
+							gx[citem] = x * 10 + 2 + t * 5;
+							gp[citem] = (int) (50 * Math.random());
+							gy[citem] = y * 10;
+							citem++;
+						}
+					} else if ((maze[x][y] & 12) == 12) {
+						for (t = 0; t < (y < 10 ? 1 : 2); t++) {
+							gt[citem] = gv[citem] = 9; // horizontal laser
+							gu[citem] = true;
+							gx[citem] = x * 10;
+							gy[citem] = y * 10 + 2 + t * 5;
+							gp[citem] = (int) (50 * Math.random());
+							citem++;
+						}
+					} else if (y > 5) {
+						gt[citem] = gv[citem] = 6; // Turret
+						gu[citem] = true;
+						gx[citem] = x * 10 + 5;
+						gy[citem] = y * 10 + 5;
+						gbnd[citem] = 1;
+						citem++;
+					}
+				}
+			}
+		}
+	}
+
+	private void placeCItem() {
+		citem = 30;
+		for (t = 0; t < 4; t++) {
+			while (true) {
+				x = (int) (Math.random() * 19);
+				y = 10 + (int) (Math.random() * 9);
+				if ((maze[x][y] & 3) == 3) {
+					gt[citem] = 10; // person
+					gv[citem] = 10;
+					gu[citem] = true;
+					gx[citem] = x * 10 + 5;
+					gy[citem] = y * 10 + 8.5;
+					gbnd[citem] = 1;
+					citem++;
+					break;
+				}
+			}
+		}
+	}
+
+	private void generateMaze() {
+		t = 0;
+		for (x = 0; x < 20; ++x) {
+			for (y = 0; y < 20; ++y) {
+				maze[x][y] = (x == 0 || x == 19 || y == 0 || y == 19) ? 32 : 63;
+			}
+		}
+		x = 1 + (int) (Math.random() * 18);
+		y = 1 + (int) (Math.random() * 18);
+		maze[x][y] &= ~48;
+		for (d = 0; d < 4; ++d) {
+			if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
+				todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
+				maze[x + mazex[d]][y + mazey[d]] &= ~16;
+			}
+		}
+		while (t > 0) {
+			n = (int) (Math.random() * t);
+			x = todo[n] >> 16; /* the top 2 bytes of the data */
+			y = todo[n] & 65535; /* the bottom 2 bytes of the data */
+			todo[n] = todo[--t];
+			do {
+				d = (int) (Math.random() * 4);
+			} while ((maze[x + mazex[d]][y + mazey[d]] & 32) != 0);
+			maze[x][y] &= ~((1 << d) | 32);
+			maze[x + mazex[d]][y + mazey[d]] &= ~(1 << (d ^ 1));
+			for (d = 0; d < 4; ++d) {
+				if ((maze[x + mazex[d]][y + mazey[d]] & 16) != 0) {
+					todo[t++] = ((x + mazex[d]) << 16) | (y + mazey[d]);
+					maze[x + mazex[d]][y + mazey[d]] &= ~16;
+				}
+			}
+		}
+	}
+
+	private void initializeVars2() {
+		gt[0] = 1; // player
+		gv[0] = 1; // player
+		gu[0] = true;
+		gx[0] = 15;
+		gy[0] = 15;
+		gbnd[0] = 1;
+		for (t = 1; t < 5; t++) {
+			gt[t] = 2; // player bullet
+			gv[t] = 2;
+			gbnd[t] = 0.2;
+			gt[t + 5] = 4; // Explosion
+			gv[t + 5] = 4;
+		}
+		for (t = 10; t < 20; t++) {
+			gt[t] = 11; // enemy bullet
+			gv[t] = 2;
+			gbnd[t] = 0.1;
+			gt[t + 10] = 12; // enemy bullet Explosion
+			gv[t + 10] = 4;
+		}
+	}
+
+	private void initializeVars() {
+		gu = new boolean[256]; // In use
+		gt = new int[256]; // Type
+		gv = new int[256]; // Visual Type
+		ga = new int[256]; // animation frame
+		gp = new int[256]; // general purpose counter.
+		gblk = new boolean[256][8][8];
+		gbnd = new double[256]; // Bounding Sphere
+		gx = new double[256]; // X coordinates
+		gy = new double[256]; // Y coordinates
+		gdx = new double[256]; // dX
+		gdy = new double[256]; // dY
+		todo = new int[20 * 20];
+		maze = new int[20][20];
+		invincible = 100;
+		lives = 3;
+		scientists = 0;
+		binh = 0;
+		restart = false;
+		toggle = false;
+	}
+
+	private JFrame initFrame() {
+		JFrame gameFrame = new JFrame();
+		gameFrame.setResizable(false);
+		gameFrame.setSize(512, 512);
+		gameFrame.setVisible(true);
+		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameFrame.createBufferStrategy(2);
+		gameFrame.addKeyListener(this);
+		return gameFrame;
 	}
 
 	private void moreStuff(Graphics2D g) {
@@ -509,7 +519,7 @@ public class M extends KeyAdapter {
 				continue;
 			if (gcol == gobj)
 				continue;
-			boolean hit = false;
+			hit = false;
 			hit = hitSomething(gobj, gcol, hit);
 			if (!hit) {
 				if (gbnd[gcol] == 0)
@@ -530,7 +540,7 @@ public class M extends KeyAdapter {
 							continue;
 						if ((rx > 7) || (ry > 7))
 							continue;
-						hit = somethingHit(gobj, gcol, hit, rx, ry);
+						somethingHit(gobj, gcol, rx, ry);
 					} else {
 						hit = true;
 					}
@@ -594,7 +604,7 @@ public class M extends KeyAdapter {
 		return hit;
 	}
 
-	private boolean somethingHit(int gobj, int gcol, boolean hit, int rx, int ry) {
+	private void somethingHit(int gobj, int gcol, int rx, int ry) {
 		if (!gblk[gcol][ry][rx]) {
 			gblk[gcol][ry][rx] = true;
 			switch (gt[gobj]) {
@@ -613,7 +623,6 @@ public class M extends KeyAdapter {
 				break;
 			}
 		}
-		return hit;
 	}
 
 	private void mazeCollisions(int gobj) {
