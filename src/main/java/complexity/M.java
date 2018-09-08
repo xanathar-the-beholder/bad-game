@@ -39,16 +39,20 @@ public class M extends KeyAdapter {
 			while (!restart) {
 				Graphics2D g = (Graphics2D) gameFrame.getBufferStrategy().getDrawGraphics();
 				toggle = !toggle;
-				clearTheScreen(g);
-				drawMaze(g);
-				rebirth();
-				gobJloop(g);
-				gameOver(g);
-				moreStuff(g);
+				doTheGame(g);
 				gameFrame.getBufferStrategy().show();
 				Thread.sleep(20);
 			}
 		} while (true);
+	}
+
+	private void doTheGame(Graphics2D g) {
+		clearTheScreen(g);
+		drawMaze(g);
+		rebirth();
+		gobJloop(g);
+		gameOver(g);
+		moreStuff(g);
 	}
 
 	private void gobJloop(Graphics2D g) {
@@ -607,19 +611,27 @@ public class M extends KeyAdapter {
 
 	private void collisionsWithOther(int gobj) {
 		for (int gcol = 0; gcol < 255; gcol++) {
-			if (!gu[gcol]) continue; if (gcol == gobj) continue;
+			if (!gu[gcol]) continue; 
+			if (gcol == gobj) continue;
 			hit = false; hitSomething(gobj, gcol);
 			if (!hit) {
 				if (gbnd[gcol] == 0) continue; if (gbnd[gobj] == 0) continue;
 				calcDxDy(gobj, gcol);
-				if (dx * dx + dy * dy < (gbnd[gcol] + gbnd[gobj]) * (gbnd[gcol] + gbnd[gobj])) {
-					if (gt[gcol] == 5) { getRxRy(gobj, gcol); if ((rx < 0) || (ry < 0)) continue; if ((rx > 7) || (ry > 7)) continue; somethingHit(gobj, gcol); } else { hit = true; }
+				if (someConditional(gobj, gcol)) {
+					if (gt[gcol] == 5) { getRxRy(gobj, gcol); if (outofBounds()) continue; somethingHit(gobj, gcol); } else { hit = true; }
 				}
-			}
-			if (hit) {
+			} else {
 				if (doContinue(gobj, gcol)) continue;
 			}
 		}
+	}
+
+	private boolean outofBounds() {
+		return ((rx < 0) || (ry < 0)) || ((rx > 7) || (ry > 7));
+	}
+
+	private boolean someConditional(int gobj, int gcol) {
+		return dx * dx + dy * dy < (gbnd[gcol] + gbnd[gobj]) * (gbnd[gcol] + gbnd[gobj]);
 	}
 	
 	public boolean doContinue(int gobj, int gcol) {
@@ -627,10 +639,14 @@ public class M extends KeyAdapter {
 		if (gt[gcol] == 10) { gu[gcol] = false; pickupScientist(); return true; }
 		if (invincible > 0) { if (gt[gcol] != 5) gu[gcol] = false; return true; }
 		andAnotherThingHit(gobj);
-		} else if ((gt[gobj] == 2) && ((gt[gcol] == 3) || (gt[gcol] == 6) || (gt[gcol] == 11))) {
+		} else if (anotherConditionExtraction(gobj, gcol)) {
 			anotherThingHit(gobj, gcol);
 		}
 		return false;
+	}
+
+	private boolean anotherConditionExtraction(int gobj, int gcol) {
+		return (gt[gobj] == 2) && ((gt[gcol] == 3) || (gt[gcol] == 6) || (gt[gcol] == 11));
 	}
 
 	private void pickupScientist() {
@@ -704,10 +720,9 @@ public class M extends KeyAdapter {
 	}
 
 	private void mazeCollisions(int gobj) {
-		extracted();
+		whichCell();
 		//
-		if (((t < 1) && ((maze[x][y] & 1) != 0)) || ((t >= 9) && ((maze[x][y] & 2) != 0))
-				|| ((d < 1) && ((maze[x][y] & 4) != 0)) || ((d >= 9) && ((maze[x][y] & 8) != 0))) {
+		if (isCollistion()) {
 			gdx[gobj] = 0;
 			gdy[gobj] = 0;
 			if (gt[gobj] == 2) {
@@ -722,7 +737,12 @@ public class M extends KeyAdapter {
 		}
 	}
 
-	private void extracted() {
+	private boolean isCollistion() {
+		return ((t < 1) && ((maze[x][y] & 1) != 0)) || ((t >= 9) && ((maze[x][y] & 2) != 0))
+				|| ((d < 1) && ((maze[x][y] & 4) != 0)) || ((d >= 9) && ((maze[x][y] & 8) != 0));
+	}
+
+	private void whichCell() {
 		d = ((int) nx) % 10;
 		t = ((int) ny) % 10;
 		x = ((int) nx) / 10;
@@ -799,19 +819,28 @@ public class M extends KeyAdapter {
 	}
 
 	private void movementOne() {
+		doBullet();
+		decreaseBinh();
+		//
+		up();
+		down();
+		handleA();
+		handleD();
+		//
+		tilt();
+		//
+	}
+
+	private void doBullet() {
 		bullet = k[KeyEvent.VK_SPACE] && (binh == 0);
+	}
+
+	private void decreaseBinh() {
 		if (binh > 0)
 			binh--;
-		//
-		if ((k[KeyEvent.VK_W]) && (gdy[0] > -0.2))
-			gdy[0] += -0.05;
-		if ((k[KeyEvent.VK_S]) && (gdy[0] < 0.2))
-			gdy[0] += 0.05;
-		if ((k[KeyEvent.VK_A]) && (gdx[0] > -0.3))
-			gdx[0] += -0.05;
-		if ((k[KeyEvent.VK_D]) && (gdx[0] < 0.3))
-			gdx[0] += 0.05;
-		//
+	}
+
+	private void tilt() {
 		if (gdy[0] > 0.02) {
 			gdy[0] += -0.01;
 		} else if (gdy[0] < 0) {
@@ -819,7 +848,26 @@ public class M extends KeyAdapter {
 		} else {
 			gdy[0] = 0.01;
 		}
-		//
+	}
+
+	private void handleD() {
+		if ((k[KeyEvent.VK_D]) && (gdx[0] < 0.3))
+			gdx[0] += 0.05;
+	}
+
+	private void handleA() {
+		if ((k[KeyEvent.VK_A]) && (gdx[0] > -0.3))
+			gdx[0] += -0.05;
+	}
+
+	private void down() {
+		if ((k[KeyEvent.VK_S]) && (gdy[0] < 0.2))
+			gdy[0] += 0.05;
+	}
+
+	private void up() {
+		if ((k[KeyEvent.VK_W]) && (gdy[0] > -0.2))
+			gdy[0] += -0.05;
 	}
 
 	public void keyPressed(KeyEvent e) {
