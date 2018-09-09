@@ -13,13 +13,13 @@ The objective of the competition is to put as much game as possible in a 4096 by
 This results in awful code because use of methods and fields eat up bytes quickly.
 So the whole game was written mostly in the constructor, and almost all variables are local.
 
-A perfect candidate make it score 10/10 :-)
+A perfect candidate to make it score 10/10 :-)
 
 ## Why?
 
 Mostly because I wanted to know how bettercodehub works.
 
-Also as a warning to any managers, auditors and consultants that think that if a tool says the code is good, the code is good.
+Also as a warning to any [managers](https://medium.com/bettercode/code-quality-human-variables-in-the-equation-616e9d2e8980), auditors and [teachers](https://medium.com/bettercode/higher-grades-for-better-code-23183648f793) that think that if a tool says the code is good, the code is good.
 
 > There are things that can be measured. There are things that are worth measuring. But what can be measured is not always what is worth measuring; what gets measured may have no relationship with what we really want to know.
 
@@ -28,6 +28,8 @@ _(from 'The Tyranny of Metrics' by Jerry Z. Muller)_
 See also [Goodhart's Law](https://en.wikipedia.org/wiki/Goodhart%27s_law) about the gaming of metrics.
 
 ## Refactoring to make things worse.
+
+Basically I will be gaming the bettercodehub analyzer to achieve its definition of 'perfection' with as little effort as possible.
 
 Most of the following tips should NEVER be performed on actual production code. 
 
