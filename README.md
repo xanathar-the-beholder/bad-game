@@ -119,7 +119,7 @@ The book mentions 7 code smells of which the first is covered by the other categ
 In Bad Game there was some Commented out code, I simply removed those lines.
 Also its full of Magic Values. Lucky enough the analyzer didn't detect those :)
 
-I made (tests for all the cases)[https://github.com/xanathar-the-beholder/bad-testcases/blob/master/src/main/java/codesmells/WriteCleanCode.java]. 
+I made [tests for all the cases](https://github.com/xanathar-the-beholder/bad-testcases/blob/master/src/main/java/codesmells/WriteCleanCode.java). 
 I was surprised to find that I was not able to trigger all of them:
 - Bad Comments: I found that a TODO comment triggers this rule. Some other examples in the book don't.
 - Commented out code: the comments must contain references to method or variables defined the current class.
@@ -142,13 +142,13 @@ Add a method with lots of semicolons;
     }
 ```
 
-Or (use this class)[https://github.com/xanathar-the-beholder/bad-testcases/blob/master/src/main/java/crash/CrashTheAnalyzer.java].
+Or [use this class](https://github.com/xanathar-the-beholder/bad-testcases/blob/master/src/main/java/crash/CrashTheAnalyzer.java).
 
 ![BCH crashes on semicolons](./bch-semicolon-crash.png)
 
 ## Bonus: Testcases for the rules
 
-I've made a (companion project, bad-testcases)[https://github.com/xanathar-the-beholder/bad-testcases], that contains code that try to trigger or bypass the rules of bettercodehub. 
+I've made a [companion project, bad-testcases](https://github.com/xanathar-the-beholder/bad-testcases), that contains code that try to trigger or bypass the rules of bettercodehub. 
 
 ## What kind of analyzer is BetterCodeHub?
 
